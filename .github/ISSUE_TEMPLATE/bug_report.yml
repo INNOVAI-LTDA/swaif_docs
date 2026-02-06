@@ -1,0 +1,25 @@
+name: Bug report
+description: Report incorrect behavior
+title: "fix: "
+labels: ["type:bug", "stage:intake"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug summary
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior

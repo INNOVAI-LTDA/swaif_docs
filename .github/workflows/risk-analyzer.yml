@@ -1,0 +1,21 @@
+name: Risk Analyzer
+
+on:
+  pull_request:
+
+jobs:
+  risk-analyzer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate risk summary
+        run: |
+          bash scripts/run-risk-analyzer.sh > risk-report.md
+          cat risk-report.md
+
+      - name: Upload risk report
+        uses: actions/upload-artifact@v4
+        with:
+          name: risk-report
+          path: risk-report.md
