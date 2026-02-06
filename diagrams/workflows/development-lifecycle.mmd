@@ -1,0 +1,184 @@
+---
+title: SWAIF Development Lifecycle
+description: Complete end-to-end sequence from problem to production
+version: 1.0.0
+---
+
+sequenceDiagram
+    actor Stakeholder
+    actor Developer
+    actor Architect
+    participant CLI as SWAIF CLI
+    participant Orchestrator as Stage Orchestrator
+    participant GitHub as GitHub Projects
+    participant Copilot as GitHub Copilot
+    participant CI as GitHub Actions
+    participant Cloud as Cloud Provider
+
+    Note over Stakeholder,Cloud: Stage 1: INTAKE
+
+    Stakeholder->>CLI: Submit problem statement
+    CLI->>Orchestrator: Create intake request
+    Orchestrator->>GitHub: Create issue (stage/intake)
+    Orchestrator-->>Developer: Assign for analysis
+    
+    Developer->>CLI: swaif intake analyze
+    CLI->>Orchestrator: Run intake analysis
+    Orchestrator->>Orchestrator: Assess feasibility & risk
+    Orchestrator->>GitHub: Update issue with analysis
+    
+    Developer->>CLI: swaif gate approve INTAKE
+    CLI->>Orchestrator: Request gate approval
+    Orchestrator->>Orchestrator: Check exit criteria
+    Orchestrator->>GitHub: Label: gate/approved, Move to SPECIFY
+    Orchestrator-->>Stakeholder: Notify: Ready for specification
+
+    Note over Stakeholder,Cloud: Stage 2: SPECIFY
+
+    Developer->>CLI: swaif specify --mode=copilot
+    CLI->>Copilot: Generate requirements spec
+    Copilot->>Copilot: Analyze intake, create models
+    Copilot-->>CLI: Return: requirements.md, data-model.yaml, api-contract.yaml
+    CLI->>GitHub: Commit specs to repo
+    
+    Developer->>CLI: Review generated specs
+    CLI-->>Developer: Display specs for approval
+    Developer->>CLI: Approve specs
+    
+    Developer->>CLI: swaif gate approve SPECIFY
+    CLI->>Orchestrator: Request gate approval
+    Orchestrator->>Orchestrator: Validate: 100% coverage plan, testable criteria
+    Orchestrator->>GitHub: Label: gate/approved, Move to PLAN
+    Orchestrator-->>Architect: Notify: Ready for design
+
+    Note over Stakeholder,Cloud: Stage 3: PLAN
+
+    Architect->>CLI: swaif plan --mode=human
+    CLI->>Copilot: Propose architecture
+    Copilot-->>Architect: Show: component diagram, tech stack, risks
+    Architect->>CLI: Review and modify design
+    CLI->>Copilot: Refine based on feedback
+    Copilot-->>CLI: Generate: architecture.md, IaC templates
+    CLI->>GitHub: Commit design artifacts
+    
+    Architect->>CLI: swaif plan validate
+    CLI->>Orchestrator: Run design validation
+    Orchestrator->>Orchestrator: Check: security, scalability, costs
+    Orchestrator-->>Architect: Validation report
+    
+    Architect->>CLI: swaif gate approve PLAN
+    CLI->>Orchestrator: Request gate approval
+    Orchestrator->>GitHub: Label: gate/approved, Move to TASKS
+    Orchestrator-->>Developer: Notify: Ready for breakdown
+
+    Note over Stakeholder,Cloud: Stage 4: TASKS
+
+    Developer->>CLI: swaif tasks generate
+    CLI->>Copilot: Analyze plan, decompose work
+    Copilot->>Copilot: Create task tree with estimates
+    Copilot-->>CLI: Return: 23 tasks, dependency graph
+    CLI->>GitHub: Create task issues
+    
+    Developer->>CLI: swaif tasks review
+    CLI-->>Developer: Display: task tree, critical path, assignments
+    Developer->>CLI: Adjust estimates, assign owners
+    CLI->>GitHub: Update task metadata
+    
+    Developer->>CLI: swaif gate approve TASKS
+    CLI->>Orchestrator: Request gate approval
+    Orchestrator->>GitHub: Label: gate/approved, Move to IMPLEMENT
+    Orchestrator-->>Developer: Notify: Ready to code
+
+    Note over Stakeholder,Cloud: Stage 5: IMPLEMENT
+
+    loop For each task
+        Developer->>CLI: swaif implement --task=T-001 --mode=copilot
+        CLI->>Orchestrator: Execute task
+        Orchestrator->>Orchestrator: Assess risk: LOW
+        Orchestrator->>Copilot: Run in Copilot mode
+        
+        Copilot->>Copilot: 1. Write tests
+        Copilot->>Copilot: 2. Implement code
+        Copilot->>Copilot: 3. Run tests
+        Copilot->>Copilot: 4. Update docs
+        Copilot->>Copilot: 5. Constitutional audit
+        
+        Copilot->>GitHub: Create PR with changes
+        Copilot->>GitHub: Link PR to task issue
+        
+        CI->>GitHub: Run CI pipeline
+        CI->>CI: Lint, test, security scan
+        CI-->>GitHub: CI status: ✓ All checks pass
+        
+        GitHub->>GitHub: Auto-merge (CI passed + constitutional)
+        GitHub-->>Developer: Notify: Task T-001 complete
+    end
+
+    Note over Developer: High-risk task detected
+
+    Developer->>CLI: swaif implement --task=T-005 --mode=challenger
+    CLI->>Orchestrator: Execute in Challenger mode
+    Orchestrator->>Copilot: Start adversarial review
+    
+    Copilot->>Copilot: Proposer AI: Implement JWT generation
+    Copilot->>Copilot: Challenger AI: Attack security design
+    Copilot->>Copilot: Proposer AI: Defend and revise
+    Copilot-->>Developer: Present: proposal, attacks, defense
+    
+    Developer->>Developer: Arbitrate: Approve with modifications
+    Developer->>CLI: Approve implementation
+    CLI->>Copilot: Finalize code
+    Copilot->>GitHub: Create PR (challenger-reviewed)
+    CI->>GitHub: Run enhanced security checks
+    GitHub->>GitHub: Merge after manual approval
+    
+    Developer->>CLI: swaif gate approve IMPLEMENT
+    CLI->>Orchestrator: Check all tasks complete
+    Orchestrator->>Orchestrator: Validate: tests pass, coverage ≥90%
+    Orchestrator->>GitHub: Label: gate/approved, Move to VERIFY
+    Orchestrator-->>Developer: Notify: Ready for verification
+
+    Note over Stakeholder,Cloud: Stage 6: VERIFY
+
+    Developer->>CLI: swaif verify
+    CLI->>Orchestrator: Run verification suite
+    
+    Orchestrator->>CI: Trigger integration tests
+    CI->>CI: Run: API tests, performance tests, security scan
+    CI-->>Orchestrator: Results: All pass
+    
+    Orchestrator->>Orchestrator: Run constitutional audit
+    Orchestrator->>Orchestrator: Check all 9 articles
+    Orchestrator-->>Developer: Audit: ✓ Compliant
+    
+    Developer->>CLI: swaif deploy --env=staging
+    CLI->>Cloud: Deploy to staging
+    Cloud->>Cloud: Create pods, run migrations
+    Cloud-->>CLI: Staging URL: https://staging.example.com
+    
+    CLI->>CI: Run acceptance tests
+    CI->>Cloud: Execute test scenarios
+    Cloud-->>CI: Test results: 12/12 pass
+    CI-->>CLI: Acceptance: ✓ Complete
+    
+    Developer->>Stakeholder: Request approval for production
+    Stakeholder->>CLI: swaif gate approve VERIFY
+    CLI->>Orchestrator: Stakeholder approval received
+    
+    Orchestrator->>Cloud: Deploy to production (canary)
+    Cloud->>Cloud: 10% traffic to new version
+    Cloud-->>Orchestrator: Health: ✓ OK
+    Cloud->>Cloud: 50% traffic
+    Cloud-->>Orchestrator: Health: ✓ OK
+    Cloud->>Cloud: 100% traffic
+    Cloud-->>Orchestrator: Deployment: ✓ Complete
+    
+    Orchestrator->>GitHub: Label: gate/approved, Move to DONE
+    Orchestrator-->>Stakeholder: Notify: Feature shipped
+    Orchestrator-->>Developer: Notify: Deployment successful
+
+    Note over Stakeholder,Cloud: Project Complete
+
+    Cloud->>Orchestrator: Send metrics & logs
+    Orchestrator->>Orchestrator: Monitor production health
+    Orchestrator-->>Developer: Dashboard: All systems operational

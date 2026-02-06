@@ -1,0 +1,161 @@
+---
+title: SWAIF Control Plane (GitHub Projects Integration)
+description: How SWAIF uses GitHub Projects as orchestration layer
+version: 1.0.0
+---
+
+graph TB
+    subgraph "GitHub Projects Board"
+        Board[Project Board<br/>'SWAIF Project X']
+        
+        subgraph "Stage Columns"
+            ColIntake[Column: INTAKE<br/>New requests]
+            ColSpecify[Column: SPECIFY<br/>Requirements definition]
+            ColPlan[Column: PLAN<br/>Architecture design]
+            ColTasks[Column: TASKS<br/>Work breakdown]
+            ColImplement[Column: IMPLEMENT<br/>Active development]
+            ColVerify[Column: VERIFY<br/>Testing & deployment]
+            ColDone[Column: DONE<br/>Completed & shipped]
+        end
+        
+        Board --> ColIntake
+        Board --> ColSpecify
+        Board --> ColPlan
+        Board --> ColTasks
+        Board --> ColImplement
+        Board --> ColVerify
+        Board --> ColDone
+    end
+
+    subgraph "GitHub Issues & PRs"
+        subgraph "Issue Types"
+            IssueIntake[Issue: Intake Request<br/>Problem statement]
+            IssueEpic[Issue: Epic<br/>Feature grouping]
+            IssueTask[Issue: Task<br/>Work unit <8h]
+            IssueBug[Issue: Bug<br/>Defect tracking]
+        end
+        
+        subgraph "Pull Requests"
+            PRStandard[PR: Standard<br/>Normal code change]
+            PRChallenger[PR: Challenger<br/>High-risk review]
+            PRHotfix[PR: Hotfix<br/>Emergency fix]
+        end
+    end
+
+    subgraph "Label System"
+        subgraph "Stage Labels"
+            LblStage["stage/intake<br/>stage/specify<br/>stage/plan<br/>stage/tasks<br/>stage/implement<br/>stage/verify"]
+        end
+        
+        subgraph "Gate Labels"
+            LblGate["gate/approved<br/>gate/rejected<br/>gate/pending"]
+        end
+        
+        subgraph "Risk Labels"
+            LblRisk["risk/low<br/>risk/medium<br/>risk/high<br/>risk/critical"]
+        end
+        
+        subgraph "Mode Labels"
+            LblMode["mode/copilot<br/>mode/human<br/>mode/challenger"]
+        end
+        
+        subgraph "Constitutional Labels"
+            LblArticle["article-i-compliant<br/>article-ii-compliant<br/>...<br/>article-ix-compliant"]
+        end
+    end
+
+    subgraph "GitHub Actions Workflows"
+        WFStageTransition[Workflow: Stage Transition<br/>Moves cards between columns]
+        WFGateCheck[Workflow: Gate Checker<br/>Validates exit criteria]
+        WFLabelSync[Workflow: Label Sync<br/>Updates labels automatically]
+        WFConstitutional[Workflow: Constitutional Audit<br/>Enforces 9 articles]
+        WFNotification[Workflow: Notifications<br/>Sends alerts]
+        WFMetrics[Workflow: Metrics Collection<br/>Gathers analytics]
+    end
+
+    subgraph "SWAIF CLI Integration"
+        CLIStatus[swaif status<br/>Query project state]
+        CLIGate[swaif gate approve<br/>Approve transitions]
+        CLITask[swaif tasks list<br/>View work items]
+        CLIImplement[swaif implement<br/>Execute tasks]
+    end
+
+    subgraph "State Persistence"
+        ProjectData[Project Metadata<br/>JSON in .swaif/]
+        IssueComments[Issue Comments<br/>Audit trail]
+        PRReviews[PR Reviews<br/>Approval history]
+        ProjectFields[Custom Fields<br/>Risk score, estimates]
+    end
+
+    %% Board to Issues
+    ColIntake --> IssueIntake
+    ColSpecify --> IssueEpic
+    ColPlan --> IssueEpic
+    ColTasks --> IssueTask
+    ColImplement --> PRStandard
+    ColImplement --> PRChallenger
+    ColVerify --> PRStandard
+
+    %% Issues to Labels
+    IssueIntake --> LblStage
+    IssueEpic --> LblStage
+    IssueTask --> LblRisk
+    IssueTask --> LblMode
+    PRStandard --> LblArticle
+    PRChallenger --> LblArticle
+
+    %% Gates
+    ColIntake --> LblGate
+    ColSpecify --> LblGate
+    ColPlan --> LblGate
+    ColTasks --> LblGate
+    ColImplement --> LblGate
+    ColVerify --> LblGate
+
+    %% Workflows
+    WFStageTransition --> ColIntake
+    WFStageTransition --> ColSpecify
+    WFStageTransition --> ColPlan
+    WFGateCheck --> LblGate
+    WFLabelSync --> LblStage
+    WFLabelSync --> LblRisk
+    WFConstitutional --> LblArticle
+    WFNotification --> IssueComments
+    WFMetrics --> ProjectFields
+
+    %% CLI Integration
+    CLIStatus --> Board
+    CLIStatus --> ProjectData
+    CLIGate --> WFGateCheck
+    CLITask --> IssueTask
+    CLIImplement --> PRStandard
+    CLIImplement --> PRChallenger
+
+    %% State Persistence
+    Board --> ProjectData
+    IssueIntake --> IssueComments
+    IssueTask --> IssueComments
+    PRStandard --> PRReviews
+    PRChallenger --> PRReviews
+    Board --> ProjectFields
+
+    %% Automation Triggers
+    WFStageTransition -.->|on: label| LblStage
+    WFGateCheck -.->|on: comment| IssueComments
+    WFConstitutional -.->|on: push| PRStandard
+    WFNotification -.->|on: status_change| Board
+
+    %% Styling
+    classDef board fill:#e1f5ff,stroke:#0277bd,stroke-width:3px
+    classDef issue fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef label fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef workflow fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef cli fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef state fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+
+    class Board,ColIntake,ColSpecify,ColPlan,ColTasks,ColImplement,ColVerify,ColDone board
+    class IssueIntake,IssueEpic,IssueTask,IssueBug,PRStandard,PRChallenger,PRHotfix issue
+    class LblStage,LblGate,LblRisk,LblMode,LblArticle label
+    class WFStageTransition,WFGateCheck,WFLabelSync,WFConstitutional,WFNotification,WFMetrics workflow
+    class CLIStatus,CLIGate,CLITask,CLIImplement cli
+    class ProjectData,IssueComments,PRReviews,ProjectFields state

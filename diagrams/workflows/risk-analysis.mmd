@@ -1,0 +1,256 @@
+---
+title: Risk Analysis and Execution Mode Selection
+description: How SWAIF assesses risk and selects appropriate execution mode
+version: 1.0.0
+---
+
+flowchart TD
+    Start([Task Created]) --> ExtractMetadata[Extract task metadata]
+    ExtractMetadata --> AnalyzeFactors[Analyze risk factors]
+    
+    AnalyzeFactors --> Factor1[Factor 1: Complexity]
+    AnalyzeFactors --> Factor2[Factor 2: Criticality]
+    AnalyzeFactors --> Factor3[Factor 3: Novelty]
+    AnalyzeFactors --> Factor4[Factor 4: Security Impact]
+    AnalyzeFactors --> Factor5[Factor 5: Data Sensitivity]
+    AnalyzeFactors --> Factor6[Factor 6: Reversibility]
+    AnalyzeFactors --> Factor7[Factor 7: Compliance]
+    AnalyzeFactors --> Factor8[Factor 8: Performance]
+    
+    subgraph "Factor 1: Complexity Analysis"
+        Factor1 --> F1A{Cyclomatic<br/>Complexity}
+        F1A -->|<10| F1Low[Low: 0 points]
+        F1A -->|10-20| F1Med[Medium: 2 points]
+        F1A -->|>20| F1High[High: 4 points]
+        
+        Factor1 --> F1B{Lines of<br/>Code Expected}
+        F1B -->|<100| F1BLow[Low: 0 points]
+        F1B -->|100-500| F1BMed[Medium: 2 points]
+        F1B -->|>500| F1BHigh[High: 4 points]
+        
+        F1Low --> ComplexityScore
+        F1Med --> ComplexityScore
+        F1High --> ComplexityScore
+        F1BLow --> ComplexityScore
+        F1BMed --> ComplexityScore
+        F1BHigh --> ComplexityScore
+        ComplexityScore[Complexity Score]
+    end
+    
+    subgraph "Factor 2: Criticality Analysis"
+        Factor2 --> F2A{Business<br/>Impact}
+        F2A -->|Internal tool| F2Low[Low: 0 points]
+        F2A -->|Customer-facing| F2Med[Medium: 3 points]
+        F2A -->|Revenue-critical| F2High[High: 6 points]
+        
+        Factor2 --> F2B{Failure<br/>Consequence}
+        F2B -->|Minor UX issue| F2BLow[Low: 0 points]
+        F2B -->|Service degradation| F2BMed[Medium: 3 points]
+        F2B -->|Data loss/breach| F2BHigh[High: 6 points]
+        
+        F2Low --> CriticalityScore
+        F2Med --> CriticalityScore
+        F2High --> CriticalityScore
+        F2BLow --> CriticalityScore
+        F2BMed --> CriticalityScore
+        F2BHigh --> CriticalityScore
+        CriticalityScore[Criticality Score]
+    end
+    
+    subgraph "Factor 3: Novelty Analysis"
+        Factor3 --> F3A{Pattern<br/>Familiarity}
+        F3A -->|Standard CRUD| F3Low[Low: 0 points]
+        F3A -->|Modified pattern| F3Med[Medium: 2 points]
+        F3A -->|Novel approach| F3High[High: 4 points]
+        
+        Factor3 --> F3B{Team<br/>Experience}
+        F3B -->|High expertise| F3BLow[Low: 0 points]
+        F3B -->|Some experience| F3BMed[Medium: 2 points]
+        F3B -->|New to team| F3BHigh[High: 4 points]
+        
+        F3Low --> NoveltyScore
+        F3Med --> NoveltyScore
+        F3High --> NoveltyScore
+        F3BLow --> NoveltyScore
+        F3BMed --> NoveltyScore
+        F3BHigh --> NoveltyScore
+        NoveltyScore[Novelty Score]
+    end
+    
+    subgraph "Factor 4: Security Analysis"
+        Factor4 --> F4A{Security<br/>Domain}
+        F4A -->|No security aspect| F4None[None: 0 points]
+        F4A -->|Input validation| F4Low[Low: 2 points]
+        F4A -->|Auth/Authz| F4High[High: 8 points]
+        F4A -->|Cryptography| F4Critical[Critical: 10 points]
+        
+        Factor4 --> F4B{Attack<br/>Surface}
+        F4B -->|Internal only| F4BLow[Low: 0 points]
+        F4B -->|Authenticated API| F4BMed[Medium: 3 points]
+        F4B -->|Public endpoint| F4BHigh[High: 5 points]
+        
+        F4None --> SecurityScore
+        F4Low --> SecurityScore
+        F4High --> SecurityScore
+        F4Critical --> SecurityScore
+        F4BLow --> SecurityScore
+        F4BMed --> SecurityScore
+        F4BHigh --> SecurityScore
+        SecurityScore[Security Score]
+    end
+    
+    subgraph "Factor 5: Data Sensitivity"
+        Factor5 --> F5A{Data Type}
+        F5A -->|Public data| F5Low[Low: 0 points]
+        F5A -->|User preferences| F5Med[Medium: 3 points]
+        F5A -->|PII| F5High[High: 6 points]
+        F5A -->|Payment/Health| F5Critical[Critical: 8 points]
+        
+        Factor5 --> F5B{Data Volume}
+        F5B -->|<1K records| F5BLow[Low: 0 points]
+        F5B -->|1K-100K records| F5BMed[Medium: 2 points]
+        F5B -->|>100K records| F5BHigh[High: 4 points]
+        
+        F5Low --> DataScore
+        F5Med --> DataScore
+        F5High --> DataScore
+        F5Critical --> DataScore
+        F5BLow --> DataScore
+        F5BMed --> DataScore
+        F5BHigh --> DataScore
+        DataScore[Data Sensitivity Score]
+    end
+    
+    subgraph "Factor 6: Reversibility"
+        Factor6 --> F6A{Rollback<br/>Ease}
+        F6A -->|Easy rollback| F6Low[Low: 0 points]
+        F6A -->|Requires manual steps| F6Med[Medium: 3 points]
+        F6A -->|Irreversible| F6High[High: 6 points]
+        
+        Factor6 --> F6B{Database<br/>Changes}
+        F6B -->|No schema changes| F6BLow[Low: 0 points]
+        F6B -->|Additive changes| F6BMed[Medium: 2 points]
+        F6B -->|Breaking changes| F6BHigh[High: 5 points]
+        
+        F6Low --> ReversibilityScore
+        F6Med --> ReversibilityScore
+        F6High --> ReversibilityScore
+        F6BLow --> ReversibilityScore
+        F6BMed --> ReversibilityScore
+        F6BHigh --> ReversibilityScore
+        ReversibilityScore[Reversibility Risk Score]
+    end
+    
+    subgraph "Factor 7: Compliance"
+        Factor7 --> F7A{Regulatory<br/>Requirements}
+        F7A -->|None| F7None[None: 0 points]
+        F7A -->|Internal policy| F7Low[Low: 2 points]
+        F7A -->|Industry standard| F7Med[Medium: 4 points]
+        F7A -->|Legal requirement| F7High[High: 6 points]
+        
+        F7None --> ComplianceScore
+        F7Low --> ComplianceScore
+        F7Med --> ComplianceScore
+        F7High --> ComplianceScore
+        ComplianceScore[Compliance Score]
+    end
+    
+    subgraph "Factor 8: Performance"
+        Factor8 --> F8A{Performance<br/>Sensitivity}
+        F8A -->|Not critical| F8Low[Low: 0 points]
+        F8A -->|User-facing| F8Med[Medium: 2 points]
+        F8A -->|Real-time/High-freq| F8High[High: 4 points]
+        
+        F8Low --> PerformanceScore
+        F8Med --> PerformanceScore
+        F8High --> PerformanceScore
+        PerformanceScore[Performance Score]
+    end
+    
+    ComplexityScore --> AggregateScores[Calculate Total Risk Score]
+    CriticalityScore --> AggregateScores
+    NoveltyScore --> AggregateScores
+    SecurityScore --> AggregateScores
+    DataScore --> AggregateScores
+    ReversibilityScore --> AggregateScores
+    ComplianceScore --> AggregateScores
+    PerformanceScore --> AggregateScores
+    
+    AggregateScores --> TotalScore{Total<br/>Risk Score}
+    
+    TotalScore -->|0-15 points| LowRisk[🟢 LOW RISK]
+    TotalScore -->|16-35 points| MediumRisk[🟡 MEDIUM RISK]
+    TotalScore -->|36-60 points| HighRisk[🟠 HIGH RISK]
+    TotalScore -->|>60 points| CriticalRisk[🔴 CRITICAL RISK]
+    
+    LowRisk --> RecommendCopilot[Recommend: Copilot Mode]
+    MediumRisk --> RecommendHuman[Recommend: Human Mode]
+    HighRisk --> RecommendChallenger[Recommend: Challenger Mode]
+    CriticalRisk --> RecommendChallenger
+    
+    RecommendCopilot --> OverrideCheck{Manual<br/>Override?}
+    RecommendHuman --> OverrideCheck
+    RecommendChallenger --> OverrideCheck
+    
+    OverrideCheck -->|No| AutoSelect[Auto-select recommended mode]
+    OverrideCheck -->|Yes| ManualSelect[Developer selects mode]
+    
+    ManualSelect --> JustifyOverride{Override<br/>Justified?}
+    JustifyOverride -->|Yes| DocumentReason[Document justification]
+    JustifyOverride -->|No| BlockOverride[Block override]
+    BlockOverride --> AutoSelect
+    
+    DocumentReason --> LogOverride[Log in audit trail]
+    LogOverride --> FinalMode
+    
+    AutoSelect --> FinalMode[Execution Mode Selected]
+    
+    FinalMode --> ModeCopilot{Selected<br/>Mode?}
+    ModeCopilot -->|Copilot| SetupCopilot[🤖 Setup Copilot Mode]
+    ModeCopilot -->|Human| SetupHuman[👤 Setup Human Mode]
+    ModeCopilot -->|Challenger| SetupChallenger[⚔️ Setup Challenger Mode]
+    
+    SetupCopilot --> ConfigureCopilot[Configure automation level: Full]
+    ConfigureCopilot --> SetCheckpoints1[Checkpoints: Post-execution only]
+    SetCheckpoints1 --> BeginExecution1[Begin task execution]
+    
+    SetupHuman --> ConfigureHuman[Configure automation level: Semi]
+    ConfigureHuman --> SetCheckpoints2[Checkpoints: Plan, Tests, Code]
+    SetCheckpoints2 --> BeginExecution2[Begin task execution]
+    
+    SetupChallenger --> ConfigureChallenger[Configure automation level: Adversarial]
+    ConfigureChallenger --> SetCheckpoints3[Checkpoints: Every phase + Manual review]
+    SetCheckpoints3 --> BeginExecution3[Begin task execution]
+    
+    BeginExecution1 --> CreateAudit[Create audit record]
+    BeginExecution2 --> CreateAudit
+    BeginExecution3 --> CreateAudit
+    
+    CreateAudit --> RecordFactors[Record all risk factors]
+    RecordFactors --> RecordScore[Record total score]
+    RecordScore --> RecordMode[Record selected mode]
+    RecordMode --> RecordJustification[Record any justification]
+    RecordJustification --> TimestampAudit[Timestamp decision]
+    TimestampAudit --> Complete([Ready to Execute])
+    
+    %% Styling
+    classDef start fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef factor fill:#e1f5ff,stroke:#0277bd,stroke-width:2px
+    classDef score fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef risk fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef lowrisk fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    classDef medrisk fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    classDef highrisk fill:#ffcc80,stroke:#ef6c00,stroke-width:2px
+    classDef critrisk fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    classDef mode fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px
+    classDef complete fill:#a5d6a7,stroke:#2e7d32,stroke-width:3px
+    
+    class Start,Complete start
+    class Factor1,Factor2,Factor3,Factor4,Factor5,Factor6,Factor7,Factor8 factor
+    class ComplexityScore,CriticalityScore,NoveltyScore,SecurityScore,DataScore,ReversibilityScore,ComplianceScore,PerformanceScore score
+    class TotalScore,OverrideCheck,JustifyOverride,ModeCopilot risk
+    class LowRisk,RecommendCopilot lowrisk
+    class MediumRisk,RecommendHuman medrisk
+    class HighRisk highrisk
+    class CriticalRisk,RecommendChallenger critrisk
+    class SetupCopilot,SetupHuman,SetupChallenger,FinalMode mode

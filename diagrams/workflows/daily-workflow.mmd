@@ -1,0 +1,138 @@
+---
+title: Developer Daily Workflow
+description: Typical day using SWAIF methodology
+version: 1.0.0
+---
+
+flowchart TD
+    Start([Developer Arrives]) --> Sync[Git pull origin main]
+    Sync --> CheckStatus[swaif status]
+    
+    CheckStatus --> ReviewDashboard{Review<br/>Dashboard}
+    ReviewDashboard --> CheckPending{Pending<br/>Approvals?}
+    
+    CheckPending -->|Yes| ReviewGates[Review gate requests]
+    ReviewGates --> ApproveGates[Approve or reject gates]
+    ApproveGates --> CheckPending
+    
+    CheckPending -->|No| ListTasks[swaif tasks list<br/>--assigned-to=me]
+    
+    ListTasks --> SelectTask{Tasks<br/>Available?}
+    
+    SelectTask -->|No tasks| PairProgramming[Offer to help teammates]
+    PairProgramming --> Coffee[Take break ☕]
+    Coffee --> CheckStatus
+    
+    SelectTask -->|Tasks ready| ChooseTask[Select highest priority]
+    ChooseTask --> AssessTask{Assess<br/>Task Type}
+    
+    AssessTask -->|Routine<br/>Low Risk| CopilotFlow[Run in Copilot Mode]
+    AssessTask -->|Novel<br/>Medium Risk| HumanFlow[Run in Human Mode]
+    AssessTask -->|Critical<br/>High Risk| ChallengerFlow[Run in Challenger Mode]
+    
+    %% Copilot Mode Flow
+    CopilotFlow --> StartCopilot[swaif implement<br/>--task=T-XXX<br/>--mode=copilot]
+    StartCopilot --> CopilotExecute[🤖 AI executes fully]
+    CopilotExecute --> CopilotTests[AI writes tests]
+    CopilotTests --> CopilotCode[AI writes code]
+    CopilotCode --> CopilotDocs[AI updates docs]
+    CopilotDocs --> CopilotCommit[AI commits with traceability]
+    CopilotCommit --> CopilotCI{CI<br/>Passes?}
+    CopilotCI -->|Yes| TaskComplete[Task marked complete ✓]
+    CopilotCI -->|No| ReviewFailure[Review CI errors]
+    ReviewFailure --> FixIssue{Can<br/>Auto-fix?}
+    FixIssue -->|Yes| CopilotExecute
+    FixIssue -->|No| ManualDebug[Debug manually]
+    ManualDebug --> CopilotCode
+    
+    %% Human Mode Flow
+    HumanFlow --> StartHuman[swaif implement<br/>--task=T-YYY<br/>--mode=human]
+    StartHuman --> HumanProposal[AI proposes plan]
+    HumanProposal --> ReviewPlan{Review<br/>Plan OK?}
+    ReviewPlan -->|No| ModifyPlan[Request changes]
+    ModifyPlan --> HumanProposal
+    ReviewPlan -->|Yes| ApprovePlan[Approve plan]
+    ApprovePlan --> HumanTests[AI writes tests]
+    HumanTests --> ReviewTests{Review<br/>Tests OK?}
+    ReviewTests -->|No| ModifyTests[Request changes]
+    ModifyTests --> HumanTests
+    ReviewTests -->|Yes| ApproveTests[Approve tests]
+    ApproveTests --> HumanCode[AI implements code]
+    HumanCode --> ReviewCode{Review<br/>Code OK?}
+    ReviewCode -->|No| ModifyCode[Request changes]
+    ModifyCode --> HumanCode
+    ReviewCode -->|Yes| ApproveCommit[Approve commit]
+    ApproveCommit --> HumanCI{CI<br/>Passes?}
+    HumanCI -->|Yes| TaskComplete
+    HumanCI -->|No| ReviewCode
+    
+    %% Challenger Mode Flow
+    ChallengerFlow --> StartChallenger[swaif implement<br/>--task=T-ZZZ<br/>--mode=challenger]
+    StartChallenger --> ProposerImpl[⚔️ Proposer AI:<br/>Implement solution]
+    ProposerImpl --> ChallengerAttack[⚔️ Challenger AI:<br/>Attack design]
+    ChallengerAttack --> ProposerDefend[⚔️ Proposer AI:<br/>Defend & revise]
+    ProposerDefend --> ReviewDebate{Review<br/>Debate}
+    ReviewDebate --> Arbitrate{Human<br/>Decision}
+    Arbitrate -->|Approve| FinalizeChallenger[Finalize implementation]
+    Arbitrate -->|Request revision| ProposerImpl
+    Arbitrate -->|Reject approach| StartChallenger
+    FinalizeChallenger --> ChallengerTests[Write comprehensive tests]
+    ChallengerTests --> ChallengerCode[Implement with safeguards]
+    ChallengerCode --> ChallengerCI{CI +<br/>Security<br/>Scan Pass?}
+    ChallengerCI -->|Yes| TaskComplete
+    ChallengerCI -->|No| ReviewDebate
+    
+    %% Post-Task Activities
+    TaskComplete --> UpdateStatus[swaif status update]
+    UpdateStatus --> CheckBlocked{Other Tasks<br/>Unblocked?}
+    CheckBlocked -->|Yes| NotifyTeam[Notify team]
+    NotifyTeam --> CheckBlocked
+    CheckBlocked -->|No| PushChanges[git push origin main]
+    
+    PushChanges --> IntegrationCheck{Integration<br/>OK?}
+    IntegrationCheck -->|No| ResolveConflicts[Resolve conflicts]
+    ResolveConflicts --> PushChanges
+    IntegrationCheck -->|Yes| CheckTime{Time for<br/>Another Task?}
+    
+    CheckTime -->|Yes, < 2 hours left| QuickTask[Find short task<br/><2 hours]
+    QuickTask --> SelectTask
+    
+    CheckTime -->|Yes, > 2 hours left| ListTasks
+    
+    CheckTime -->|No, end of day| Standup[swaif standup generate]
+    Standup --> StandupReport[Review generated report]
+    StandupReport --> CheckStageGate{Current Stage<br/>Complete?}
+    
+    CheckStageGate -->|Yes| RequestGateApproval[swaif gate review STAGE]
+    RequestGateApproval --> PreparePresentation[Prepare gate artifacts]
+    PreparePresentation --> CheckStageGate
+    
+    CheckStageGate -->|No| UpdateTeam[Post standup to team chat]
+    UpdateTeam --> ReviewMetrics[Check project metrics]
+    ReviewMetrics --> PlanTomorrow[Plan tomorrow's work]
+    PlanTomorrow --> EndDay([Log off 🏠])
+    
+    %% Side flows
+    CheckStatus -.->|Blocked issue found| InvestigateBlocker[Investigate blocker]
+    InvestigateBlocker -.-> UnblockTask[swaif tasks unblock]
+    UnblockTask -.-> CheckStatus
+    
+    TaskComplete -.->|Coverage < 90%| AddTests[Add more tests]
+    AddTests -.-> TaskComplete
+    
+    %% Styling
+    classDef start fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef action fill:#e1f5ff,stroke:#0277bd,stroke-width:2px
+    classDef copilot fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef human fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    classDef challenger fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef complete fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    
+    class Start,EndDay start
+    class ReviewDashboard,CheckPending,SelectTask,AssessTask,ReviewPlan,ReviewTests,ReviewCode,ReviewDebate,Arbitrate,CheckBlocked,IntegrationCheck,CheckTime,CheckStageGate decision
+    class Sync,CheckStatus,ListTasks,ChooseTask,UpdateStatus,PushChanges action
+    class CopilotFlow,StartCopilot,CopilotExecute,CopilotTests,CopilotCode,CopilotDocs,CopilotCommit copilot
+    class HumanFlow,StartHuman,HumanProposal,HumanTests,HumanCode human
+    class ChallengerFlow,StartChallenger,ProposerImpl,ChallengerAttack,ProposerDefend,ChallengerTests,ChallengerCode challenger
+    class TaskComplete,Standup complete
