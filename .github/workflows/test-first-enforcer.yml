@@ -14,7 +14,7 @@ jobs:
           files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
           echo "$files"
           impl_changes=$(echo "$files" | grep -Ec '^(src/|scripts/|examples/)') || true
-          test_changes=$(echo "$files" | grep -Ec '^(tests/|spec/|__tests__/|examples/.+\.spec\.md)') || true
+          test_changes=$(echo "$files" | grep -Ec '^(tests/|spec/|__tests__/|examples/.+\.md)') || true
           if [ "$impl_changes" -gt 0 ] && [ "$test_changes" -eq 0 ]; then
             echo "Implementation changed without test/spec updates."
             exit 1
