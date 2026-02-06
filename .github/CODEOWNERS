@@ -1,0 +1,8 @@
+# Global owners
+* @engineering-team
+
+# Documentation and workflow ownership
+/docs/ @docs-team
+/.github/ @platform-team
+/scripts/ @platform-team
+/examples/ @security-team @docs-team

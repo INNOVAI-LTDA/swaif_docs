@@ -1,0 +1,25 @@
+name: Factory Stage Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+
+jobs:
+  stage-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required artifacts exist
+        run: |
+          test -f scripts/validate-scaffold.sh
+          bash scripts/validate-scaffold.sh
+
+      - name: Require stage labels
+        run: |
+          labels='${{ toJson(github.event.pull_request.labels.*.name) }}'
+          echo "$labels" | grep -Eq '"stage:(intake|specify|build|evaluate)"' || {
+            echo "Missing stage:* label";
+            exit 1;
+          }

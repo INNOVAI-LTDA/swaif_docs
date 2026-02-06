@@ -1,0 +1,13 @@
+flowchart TB
+    i[Intake]
+    r[Ready]
+    p[In Progress]
+    v[Validation]
+    rel[Release]
+    l[Learn]
+
+    i -->|clear problem, metrics, owners| r
+    r -->|bounded scope, testable AC, risk controls| p
+    p -->|functional completion, tests green, ops prep| v
+    v -->|quality/compliance pass, sign-off, rollback plan| rel
+    rel -->|outcomes measured, deviations analyzed| l

@@ -1,0 +1,24 @@
+name: Constitution Guard
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  constitution-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure constitution docs are present
+        run: |
+          test -f docs/CONSTITUTION_GUIDE.md
+          test -f docs/SWAIF_HANDBOOK.md
+
+      - name: Detect changes to constitution-sensitive files
+        run: |
+          git diff --name-only HEAD~1 HEAD | tee /tmp/changed.txt
+          if grep -Eq '^docs/(CONSTITUTION_GUIDE|SWAIF_HANDBOOK)\.md$' /tmp/changed.txt; then
+            echo "Constitution files changed. Require reviewer attention."
+          fi
