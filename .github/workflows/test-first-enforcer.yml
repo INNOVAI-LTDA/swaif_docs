@@ -1,0 +1,25 @@
+name: Test First Enforcer
+
+on:
+  pull_request:
+
+jobs:
+  test-first:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+       with:
+         fetch-depth: 0
+         fetch-tags: false
+         ref: ${{ github.head_ref }}
+
+      - name: Check test folder touched before implementation
+        run: |
+          files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "$files"
+          impl_changes=$(echo "$files" | grep -Ec '^(src/|scripts/|examples/)') || true
+          test_changes=$(echo "$files" | grep -Ec '^(tests/|spec/|__tests__/|examples/.+\.md)') || true
+          if [ "$impl_changes" -gt 0 ] && [ "$test_changes" -eq 0 ]; then
+            echo "Implementation changed without test/spec updates."
+            exit 1
+          fi

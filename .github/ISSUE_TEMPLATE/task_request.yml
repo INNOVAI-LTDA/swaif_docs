@@ -1,0 +1,20 @@
+name: Task request
+description: Operational or documentation task
+title: "task: "
+labels: ["type:task", "stage:specify"]
+body:
+  - type: input
+    id: objective
+    attributes:
+      label: Objective
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: In-scope and out-of-scope boundaries.
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
