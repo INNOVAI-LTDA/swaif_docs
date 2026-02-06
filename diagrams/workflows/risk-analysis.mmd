@@ -1,0 +1,16 @@
+flowchart LR
+    identify[Identify risks]
+    categorize[Categorize: tech, delivery, compliance]
+    score[Score impact x likelihood]
+    prioritize[Prioritize by exposure]
+    mitigate[Define mitigations]
+    verify[Verify controls in validation]
+    monitor[Monitor post-release]
+
+    identify --> categorize
+    categorize --> score
+    score --> prioritize
+    prioritize --> mitigate
+    mitigate --> verify
+    verify --> monitor
+    monitor --> identify
