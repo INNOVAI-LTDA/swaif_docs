@@ -1,0 +1,14 @@
+stateDiagram-v2
+    [*] --> Intake
+    Intake --> Ready: problem + metrics defined
+    Ready --> InProgress: scope + acceptance bounded
+    InProgress --> Validation: implementation complete
+    Validation --> Release: quality/compliance passed
+    Release --> Learn: outcomes collected
+    Learn --> Ready: next increment planned
+
+    Intake --> Intake: refine brief
+    Ready --> Intake: missing dependencies
+    InProgress --> Ready: scope reset
+    Validation --> InProgress: defects found
+    Release --> Validation: rollback rehearsal failed
