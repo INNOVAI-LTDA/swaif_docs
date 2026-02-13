@@ -1,0 +1,44 @@
+---
+title: SWAIF System Overview
+description: High-level system architecture showing major subsystems
+version: 1.0.0
+---
+
+flowchart TB
+    subgraph ui[Interfaces]
+      board[Delivery Board]
+      cli[Automation CLI]
+      pr[PR Checks]
+    end
+
+    subgraph core[SWAIF Core]
+      orchestrator[Stage Orchestrator]
+      rules[Gate Rules Evaluator]
+      risk[Risk Engine]
+      audit[Audit Log Service]
+    end
+
+    subgraph data[Data Services]
+      cfg[(Policy Config)]
+      work[(Work Items)]
+      ev[(Evidence Store)]
+      telem[(Telemetry DB)]
+    end
+
+    board --> orchestrator
+    cli --> orchestrator
+    pr --> rules
+
+    orchestrator --> rules
+    orchestrator --> risk
+    rules --> cfg
+    risk --> cfg
+
+    orchestrator --> work
+    rules --> ev
+    risk --> ev
+    audit --> ev
+
+    work --> telem
+    ev --> telem
+    telem --> board
