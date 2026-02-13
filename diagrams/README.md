@@ -96,6 +96,21 @@ Illustrates:
 
 ---
 
+### System Overview
+**File:** `architecture/system-overview.mmd`  
+**Type:** Flowchart  
+**Purpose:** High-level system architecture showing major subsystems
+
+Shows:
+- User interfaces (Delivery Board, Automation CLI, PR Checks)
+- Core services (Stage Orchestrator, Gate Rules Evaluator, Risk Engine, Audit Log)
+- Data services (Policy Config, Work Items, Evidence Store, Telemetry DB)
+- Information and control flows
+
+**Use When:** Understanding high-level system architecture or explaining core SWAIF components.
+
+---
+
 ### Component Architecture
 **File:** `architecture/component-architecture.mmd`  
 **Type:** C4 Component Diagram  
@@ -140,6 +155,22 @@ Details:
 - Label-based stage tracking
 
 **Use When:** Understanding how SWAIF integrates with GitHub, customizing workflows, or debugging automation.
+
+---
+
+### Control Flow
+**File:** `architecture/control-flow.mmd`  
+**Type:** Flowchart  
+**Purpose:** Governance and control flow between stakeholders and systems
+
+Details:
+- Executive sponsors defining governance priorities
+- Product managers submitting initiative requests
+- Delivery teams providing implementation updates
+- QA/Security reviewers making validation decisions
+- Evidence collection and telemetry feedback loops
+
+**Use When:** Understanding stakeholder interactions or explaining governance model.
 
 ---
 
@@ -509,18 +540,20 @@ This directory contains architecture and workflow diagrams for the SWAIF framewo
 ## Diagram Index
 
 ### Architecture (`diagrams/architecture/`)
-- `system-context.mmd` — external actors and core SWAIF platform context.
-- `component-architecture.mmd` — internal components and data flow.
-- `deployment-view.mmd` — runtime deployment topology.
-- `control-plane.mmd` — governance and policy control interactions.
-- `state-machine.mmd` — initiative life-cycle state machine.
+- `system-context.mmd` — C4 Context diagram showing external actors and core SWAIF platform context
+- `system-overview.mmd` — High-level system architecture showing major subsystems and data flow
+- `component-architecture.mmd` — Detailed internal components and layered architecture
+- `deployment-view.mmd` — Physical and logical deployment topology  
+- `control-plane.mmd` — GitHub Projects-based governance and orchestration layer
+- `control-flow.mmd` — Governance control flow between stakeholders and systems
+- `state-machine.mmd` — Complete six-stage initiative lifecycle state machine
 
 ### Workflows (`diagrams/workflows/`)
-- `development-lifecycle.mmd` — end-to-end lifecycle from intake to learning.
-- `daily-workflow.mmd` — daily team operating loop.
-- `stage-transitions.mmd` — explicit gate criteria by stage.
-- `challenger-pr.mmd` — pull request challenger/reviewer decision flow.
-- `risk-analysis.mmd` — risk identification, scoring, and mitigation flow.
+- `development-lifecycle.mmd` — End-to-end sequence from problem intake to production deployment
+- `daily-workflow.mmd` — Developer daily operating loop with all execution modes
+- `stage-transitions.mmd` — Complete gate approval decision trees for all 6 stages
+- `challenger-pr.mmd` — Adversarial review process for high-risk changes
+- `risk-analysis.mmd` — Risk factor evaluation and execution mode selection
 
 ### Poster
 - `POSTER.md` — plain-text ASCII visual summary of all diagrams.
