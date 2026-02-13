@@ -1,3 +1,186 @@
+---
+title: Challenger Mode (Adversarial Review Process)
+description: Parallel implementation with proposer and challenger AIs
+version: 1.0.0
+---
+
+flowchart TD
+    Start([High-Risk Task Identified]) --> RiskCheck{Risk Level<br/>Assessment}
+    
+    RiskCheck -->|Security Critical| ChallengerMode[🔴 Trigger Challenger Mode]
+    RiskCheck -->|Payment Processing| ChallengerMode
+    RiskCheck -->|Authentication/Auth| ChallengerMode
+    RiskCheck -->|Cryptography| ChallengerMode
+    RiskCheck -->|Data Migration| ChallengerMode
+    RiskCheck -->|Breaking Changes| ChallengerMode
+    
+    ChallengerMode --> Initialize[Initialize adversarial session]
+    Initialize --> LoadContext[Load: requirements, specs, constraints]
+    
+    LoadContext --> ProposerPhase[⚔️ PHASE 1: PROPOSER]
+    
+    subgraph "Proposer AI Implementation"
+        ProposerPhase --> P1[Analyze requirements]
+        P1 --> P2[Design solution approach]
+        P2 --> P3[Identify potential weaknesses]
+        P3 --> P4[Write defensive implementation]
+        P4 --> P5[Add error handling]
+        P5 --> P6[Document design decisions]
+        P6 --> P7[Generate test cases]
+        P7 --> ProposerOutput[Proposer Submission]
+    end
+    
+    ProposerOutput --> ChallengerPhase[⚔️ PHASE 2: CHALLENGER]
+    
+    subgraph "Challenger AI Attack"
+        ChallengerPhase --> C1[Review proposed implementation]
+        C1 --> C2[Analyze security vulnerabilities]
+        C2 --> C3[Test edge cases]
+        C3 --> C4[Simulate attack vectors]
+        C4 --> C5[Check for race conditions]
+        C5 --> C6[Validate input handling]
+        C6 --> C7[Review error handling]
+        C7 --> C8[Assess performance issues]
+        C8 --> C9[Check compliance violations]
+        C9 --> ChallengerOutput[Challenger Report]
+    end
+    
+    ChallengerOutput --> IssuesFound{Issues<br/>Identified?}
+    
+    IssuesFound -->|Yes| CategorizeIssues[Categorize by severity]
+    CategorizeIssues --> SeverityCheck{Severity<br/>Level?}
+    
+    SeverityCheck -->|Critical| CriticalIssues[🔴 CRITICAL<br/>Must fix]
+    SeverityCheck -->|High| HighIssues[🟠 HIGH<br/>Should fix]
+    SeverityCheck -->|Medium| MediumIssues[🟡 MEDIUM<br/>Consider fixing]
+    SeverityCheck -->|Low| LowIssues[🟢 LOW<br/>Optional fix]
+    
+    CriticalIssues --> DefensePhase
+    HighIssues --> DefensePhase
+    MediumIssues --> DefensePhase
+    LowIssues --> DefensePhase
+    
+    DefensePhase[⚔️ PHASE 3: DEFENSE]
+    
+    subgraph "Proposer Defense & Revision"
+        DefensePhase --> D1[Review challenger findings]
+        D1 --> D2{Agree with<br/>Criticisms?}
+        
+        D2 -->|Agree| D3[Revise implementation]
+        D3 --> D4[Address critical issues]
+        D4 --> D5[Fix high-priority issues]
+        D5 --> D6[Consider medium issues]
+        D6 --> D7[Update tests]
+        D7 --> D8[Document fixes]
+        D8 --> RevisedProposal[Revised Submission]
+        
+        D2 -->|Disagree| D9[Prepare counter-arguments]
+        D9 --> D10[Explain design rationale]
+        D10 --> D11[Provide evidence]
+        D11 --> D12[Demonstrate safety]
+        D12 --> DefenseArgument[Defense Argument]
+    end
+    
+    RevisedProposal --> SecondReview[Challenger: Second review]
+    DefenseArgument --> HumanReview
+    
+    SecondReview --> StillIssues{Still<br/>Issues?}
+    StillIssues -->|Yes, Critical| DebateCycle[Continue debate]
+    StillIssues -->|Yes, Minor| HumanReview
+    StillIssues -->|No| HumanReview
+    
+    DebateCycle --> DefensePhase
+    
+    HumanReview[👤 PHASE 4: HUMAN ARBITRATION]
+    
+    subgraph "Human Decision"
+        HumanReview --> H1[Review complete debate]
+        H1 --> H2[Examine: Proposal]
+        H2 --> H3[Examine: Attacks]
+        H3 --> H4[Examine: Defense]
+        H4 --> H5[Assess: Trade-offs]
+        H5 --> H6[Consider: Context]
+        H6 --> H7[Evaluate: Risk]
+        H7 --> Decision{Human<br/>Decision}
+    end
+    
+    Decision -->|Approve Proposal| ApproveProposal[✅ APPROVE]
+    Decision -->|Approve with Modifications| ApproveModified[✅ APPROVE WITH CHANGES]
+    Decision -->|Request Major Revision| RequestRevision[🔄 REVISE]
+    Decision -->|Reject Approach| RejectApproach[❌ REJECT]
+    
+    ApproveProposal --> Finalize[Finalize implementation]
+    ApproveModified --> ModifySpec[Apply human-specified changes]
+    ModifySpec --> Finalize
+    
+    RequestRevision --> RevisionGuidance[Provide specific guidance]
+    RevisionGuidance --> ProposerPhase
+    
+    RejectApproach --> AlternativeApproach[Require alternative approach]
+    AlternativeApproach --> ProposerPhase
+    
+    Finalize --> WriteTests[Write comprehensive test suite]
+    WriteTests --> ImplementCode[Implement final code]
+    ImplementCode --> AddSafeguards[Add runtime safeguards]
+    AddSafeguards --> DocumentSecurity[Document security considerations]
+    DocumentSecurity --> CreatePR[Create Pull Request]
+    
+    CreatePR --> PRLabels[Label: challenger-reviewed]
+    PRLabels --> EnhancedCI[Run enhanced CI checks]
+    
+    subgraph "Enhanced CI Pipeline"
+        EnhancedCI --> CI1[Standard linting]
+        CI1 --> CI2[Unit tests]
+        CI2 --> CI3[Integration tests]
+        CI3 --> CI4[Security scanner]
+        CI4 --> CI5[Dependency audit]
+        CI5 --> CI6[SAST analysis]
+        CI6 --> CI7[Performance profiling]
+        CI7 --> CI8[Constitutional audit]
+        CI8 --> CIResult{All<br/>Checks Pass?}
+    end
+    
+    CIResult -->|No| FixCIIssues[Fix CI failures]
+    FixCIIssues --> EnhancedCI
+    
+    CIResult -->|Yes| ManualReview[👤 Manual code review required]
+    ManualReview --> ReviewApproval{Senior<br/>Approval?}
+    
+    ReviewApproval -->|No| ReviewFeedback[Address review comments]
+    ReviewFeedback --> ImplementCode
+    
+    ReviewApproval -->|Yes| MergePR[Merge Pull Request]
+    MergePR --> LogAudit[Log challenger audit trail]
+    LogAudit --> NotifyTeam[Notify team of completion]
+    NotifyTeam --> Complete([✅ Task Complete])
+    
+    IssuesFound -->|No| ProposerPerfect[No issues found<br/>Exceptional!]
+    ProposerPerfect --> HumanReview
+    
+    %% Timeout handling
+    DefensePhase -.->|Max 3 rounds| ForceHuman[Force human decision]
+    ForceHuman -.-> HumanReview
+    
+    %% Styling
+    classDef start fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef proposer fill:#e1f5ff,stroke:#0277bd,stroke-width:2px
+    classDef challenger fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef defense fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef human fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef critical fill:#ffcdd2,stroke:#b71c1c,stroke-width:3px
+    classDef decision fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    classDef approve fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    classDef complete fill:#a5d6a7,stroke:#2e7d32,stroke-width:3px
+    
+    class Start start
+    class ProposerPhase,P1,P2,P3,P4,P5,P6,P7,ProposerOutput proposer
+    class ChallengerPhase,C1,C2,C3,C4,C5,C6,C7,C8,C9,ChallengerOutput,SecondReview challenger
+    class DefensePhase,D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,RevisedProposal,DefenseArgument defense
+    class HumanReview,H1,H2,H3,H4,H5,H6,H7,Decision,ManualReview,ReviewApproval human
+    class CriticalIssues critical
+    class RiskCheck,IssuesFound,SeverityCheck,StillIssues,CIResult decision
+    class ApproveProposal,ApproveModified,MergePR approve
+    class Complete,NotifyTeam complete
 flowchart TD
     open[Open PR with evidence]
     auto[Automated checks]

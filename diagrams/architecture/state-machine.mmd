@@ -1,3 +1,255 @@
+---
+title: SWAIF State Machine
+description: Complete state machine for the six-stage workflow with gates
+version: 1.0.0
+---
+
+stateDiagram-v2
+    [*] --> INTAKE: Project created
+
+    state "Stage 1: INTAKE" as INTAKE {
+        [*] --> ParseProblem
+        ParseProblem --> AssessRisk
+        AssessRisk --> ConfirmFeasibility
+        ConfirmFeasibility --> GateCheck1
+        GateCheck1 --> [*]
+    }
+
+    state "Gate 1 Decision" as Gate1 {
+        [*] --> CheckCriteria1
+        CheckCriteria1 --> Approved1: All criteria met
+        CheckCriteria1 --> Rejected1: Criteria missing
+        CheckCriteria1 --> WaiverRequested1: Exception needed
+        WaiverRequested1 --> Approved1: Waiver granted
+        WaiverRequested1 --> Rejected1: Waiver denied
+        Approved1 --> [*]
+        Rejected1 --> [*]
+    }
+
+    state "Stage 2: SPECIFY" as SPECIFY {
+        [*] --> ModelRequirements
+        ModelRequirements --> DefineAPI
+        DefineAPI --> CreateDataModel
+        CreateDataModel --> WriteAcceptanceCriteria
+        WriteAcceptanceCriteria --> PlanTestCoverage
+        PlanTestCoverage --> GateCheck2
+        GateCheck2 --> [*]
+    }
+
+    state "Gate 2 Decision" as Gate2 {
+        [*] --> CheckCriteria2
+        CheckCriteria2 --> Approved2: All criteria met
+        CheckCriteria2 --> Rejected2: Criteria missing
+        CheckCriteria2 --> WaiverRequested2: Exception needed
+        WaiverRequested2 --> Approved2: Waiver granted
+        WaiverRequested2 --> Rejected2: Waiver denied
+        Approved2 --> [*]
+        Rejected2 --> [*]
+    }
+
+    state "Stage 3: PLAN" as PLAN {
+        [*] --> DesignArchitecture
+        DesignArchitecture --> SelectTechStack
+        SelectTechStack --> DocumentDataFlows
+        DocumentDataFlows --> DefineSecurityControls
+        DefineSecurityControls --> IdentifyRisks
+        IdentifyRisks --> EstimateCosts
+        EstimateCosts --> GateCheck3
+        GateCheck3 --> [*]
+    }
+
+    state "Gate 3 Decision" as Gate3 {
+        [*] --> CheckCriteria3
+        CheckCriteria3 --> Approved3: All criteria met
+        CheckCriteria3 --> Rejected3: Criteria missing
+        CheckCriteria3 --> WaiverRequested3: Exception needed
+        WaiverRequested3 --> Approved3: Waiver granted
+        WaiverRequested3 --> Rejected3: Waiver denied
+        Approved3 --> [*]
+        Rejected3 --> [*]
+    }
+
+    state "Stage 4: TASKS" as TASKS {
+        [*] --> DecomposePlan
+        DecomposePlan --> EstimateTasks
+        EstimateTasks --> MapDependencies
+        MapDependencies --> IdentifyCriticalPath
+        IdentifyCriticalPath --> FlagHighRisk
+        FlagHighRisk --> AssignOwners
+        AssignOwners --> GateCheck4
+        GateCheck4 --> [*]
+    }
+
+    state "Gate 4 Decision" as Gate4 {
+        [*] --> CheckCriteria4
+        CheckCriteria4 --> Approved4: All criteria met
+        CheckCriteria4 --> Rejected4: Criteria missing
+        CheckCriteria4 --> WaiverRequested4: Exception needed
+        WaiverRequested4 --> Approved4: Waiver granted
+        WaiverRequested4 --> Rejected4: Waiver denied
+        Approved4 --> [*]
+        Rejected4 --> [*]
+    }
+
+    state "Stage 5: IMPLEMENT" as IMPLEMENT {
+        [*] --> SelectExecutionMode
+        
+        state "Execution Mode" as ExecMode {
+            [*] --> RiskAssessment
+            RiskAssessment --> CopilotMode: Low risk
+            RiskAssessment --> HumanMode: Medium risk
+            RiskAssessment --> ChallengerMode: High risk
+            
+            CopilotMode --> WriteTests
+            HumanMode --> WriteTests
+            ChallengerMode --> ProposerImplements
+            ProposerImplements --> ChallengerAttacks
+            ChallengerAttacks --> ProposerDefends
+            ProposerDefends --> HumanArbitrates
+            HumanArbitrates --> WriteTests: Approved
+            HumanArbitrates --> ProposerImplements: Rejected, revise
+            
+            WriteTests --> ImplementCode
+            ImplementCode --> RunTests
+            RunTests --> UpdateDocs
+            UpdateDocs --> ConstitutionalAudit
+            ConstitutionalAudit --> [*]: All articles pass
+            ConstitutionalAudit --> WriteTests: Violations found
+        }
+        
+        SelectExecutionMode --> ExecMode
+        ExecMode --> GateCheck5
+        GateCheck5 --> [*]
+    }
+
+    state "Gate 5 Decision" as Gate5 {
+        [*] --> CheckCriteria5
+        CheckCriteria5 --> Approved5: All criteria met
+        CheckCriteria5 --> Rejected5: Criteria missing
+        CheckCriteria5 --> WaiverRequested5: Exception needed
+        WaiverRequested5 --> Approved5: Waiver granted
+        WaiverRequested5 --> Rejected5: Waiver denied
+        Approved5 --> [*]
+        Rejected5 --> [*]
+    }
+
+    state "Stage 6: VERIFY" as VERIFY {
+        [*] --> RunIntegrationTests
+        RunIntegrationTests --> PerformSecurityScan
+        PerformSecurityScan --> ValidatePerformance
+        ValidatePerformance --> AuditConstitutional
+        AuditConstitutional --> DeployStaging
+        DeployStaging --> RunAcceptanceTests
+        RunAcceptanceTests --> GetStakeholderApproval
+        GetStakeholderApproval --> PrepareRunbook
+        PrepareRunbook --> DeployProduction
+        DeployProduction --> GateCheck6
+        GateCheck6 --> [*]
+    }
+
+    state "Gate 6 Decision" as Gate6 {
+        [*] --> CheckCriteria6
+        CheckCriteria6 --> Approved6: All criteria met
+        CheckCriteria6 --> Rejected6: Criteria missing
+        CheckCriteria6 --> WaiverRequested6: Exception needed
+        WaiverRequested6 --> Approved6: Waiver granted
+        WaiverRequested6 --> Rejected6: Waiver denied
+        Approved6 --> [*]
+        Rejected6 --> [*]
+    }
+
+    state "DONE" as DONE {
+        [*] --> Shipped
+        Shipped --> MonitorProduction
+        MonitorProduction --> [*]
+    }
+
+    state "ERROR" as ERROR {
+        [*] --> IdentifyIssue
+        IdentifyIssue --> FixRequired: Fixable
+        IdentifyIssue --> Abandoned: Not feasible
+        FixRequired --> [*]
+        Abandoned --> [*]
+    }
+
+    %% Transitions between stages
+    INTAKE --> Gate1
+    Gate1 --> SPECIFY: Approved1
+    Gate1 --> INTAKE: Rejected1
+    Gate1 --> ERROR: Abandoned
+
+    SPECIFY --> Gate2
+    Gate2 --> PLAN: Approved2
+    Gate2 --> SPECIFY: Rejected2
+    Gate2 --> INTAKE: Major revision needed
+
+    PLAN --> Gate3
+    Gate3 --> TASKS: Approved3
+    Gate3 --> PLAN: Rejected3
+    Gate3 --> SPECIFY: Requirements change
+
+    TASKS --> Gate4
+    Gate4 --> IMPLEMENT: Approved4
+    Gate4 --> TASKS: Rejected4
+    Gate4 --> PLAN: Architecture change
+
+    IMPLEMENT --> Gate5
+    Gate5 --> VERIFY: Approved5
+    Gate5 --> IMPLEMENT: Rejected5
+    Gate5 --> TASKS: Major rework
+
+    VERIFY --> Gate6
+    Gate6 --> DONE: Approved6
+    Gate6 --> VERIFY: Rejected6
+    Gate6 --> IMPLEMENT: Critical issues
+
+    DONE --> [*]: Project complete
+
+    %% Error paths
+    INTAKE --> ERROR: Unfeasible
+    SPECIFY --> ERROR: Impossible requirements
+    PLAN --> ERROR: Technical constraints
+    IMPLEMENT --> ERROR: Blocking issues
+    VERIFY --> ERROR: Critical failures
+    
+    ERROR --> INTAKE: FixRequired
+
+    %% Notes
+    note right of INTAKE
+        Entry: Problem statement
+        Exit: Feasibility confirmed
+        Duration: 1-2 days
+    end note
+
+    note right of SPECIFY
+        Entry: Approved intake
+        Exit: Complete spec
+        Duration: 3-5 days
+    end note
+
+    note right of PLAN
+        Entry: Requirements defined
+        Exit: Architecture approved
+        Duration: 2-4 days
+    end note
+
+    note right of TASKS
+        Entry: Design complete
+        Exit: All tasks estimated
+        Duration: 1-2 days
+    end note
+
+    note right of IMPLEMENT
+        Entry: Task ready
+        Exit: Code complete & tested
+        Duration: Variable per task
+    end note
+
+    note right of VERIFY
+        Entry: Implementation done
+        Exit: Production deployed
+        Duration: 2-3 days
+    end note
 stateDiagram-v2
     [*] --> Intake
     Intake --> Ready: problem + metrics defined

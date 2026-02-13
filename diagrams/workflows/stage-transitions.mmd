@@ -1,3 +1,214 @@
+---
+title: Stage Gate Transition Decision Tree
+description: Logic for approving or rejecting stage transitions
+version: 1.0.0
+---
+
+flowchart TD
+    Start([Gate Approval Requested]) --> IdentifyStage{Which Stage<br/>Gate?}
+    
+    %% INTAKE Gate
+    IdentifyStage -->|INTAKE| Gate1[Gate 1: INTAKE → SPECIFY]
+    Gate1 --> Check1A{Problem<br/>Clearly Defined?}
+    Check1A -->|No| Reject1[❌ REJECT GATE 1]
+    Check1A -->|Yes| Check1B{Stakeholders<br/>Identified?}
+    Check1B -->|No| Reject1
+    Check1B -->|Yes| Check1C{Feasibility<br/>Confirmed?}
+    Check1C -->|No| Reject1
+    Check1C -->|Yes| Check1D{Risk Assessment<br/>Complete?}
+    Check1D -->|No| Reject1
+    Check1D -->|Yes| Approve1[✅ APPROVE GATE 1]
+    
+    %% SPECIFY Gate
+    IdentifyStage -->|SPECIFY| Gate2[Gate 2: SPECIFY → PLAN]
+    Gate2 --> Check2A{Functional Requirements<br/>Documented?}
+    Check2A -->|No| Reject2[❌ REJECT GATE 2]
+    Check2A -->|Yes| Check2B{Data Model<br/>Complete?}
+    Check2B -->|No| Reject2
+    Check2B -->|Yes| Check2C{API Contract<br/>Defined?}
+    Check2C -->|No| Reject2
+    Check2C -->|Yes| Check2D{Acceptance Criteria<br/>Testable?}
+    Check2D -->|No| Reject2
+    Check2D -->|Yes| Check2E{Test Coverage Plan<br/>≥80%?}
+    Check2E -->|No| Reject2
+    Check2E -->|Yes| Approve2[✅ APPROVE GATE 2]
+    
+    %% PLAN Gate
+    IdentifyStage -->|PLAN| Gate3[Gate 3: PLAN → TASKS]
+    Gate3 --> Check3A{Architecture Diagram<br/>Approved?}
+    Check3A -->|No| Reject3[❌ REJECT GATE 3]
+    Check3A -->|Yes| Check3B{Technology Stack<br/>Justified?}
+    Check3B -->|No| Reject3
+    Check3B -->|Yes| Check3C{Data Flows<br/>Documented?}
+    Check3C -->|No| Reject3
+    Check3C -->|Yes| Check3D{Security Architecture<br/>Defined?}
+    Check3D -->|No| Reject3
+    Check3D -->|Yes| Check3E{Risks Identified<br/>& Mitigated?}
+    Check3E -->|No| Reject3
+    Check3E -->|Yes| Check3F{Cost Within<br/>Budget?}
+    Check3F -->|No| Reject3
+    Check3F -->|Yes| Approve3[✅ APPROVE GATE 3]
+    
+    %% TASKS Gate
+    IdentifyStage -->|TASKS| Gate4[Gate 4: TASKS → IMPLEMENT]
+    Gate4 --> Check4A{All Work<br/>Decomposed?}
+    Check4A -->|No| Reject4[❌ REJECT GATE 4]
+    Check4A -->|Yes| Check4B{Each Task<br/><8 Hours?}
+    Check4B -->|No| Reject4
+    Check4B -->|Yes| Check4C{Dependencies<br/>Mapped?}
+    Check4C -->|No| Reject4
+    Check4C -->|Yes| Check4D{Critical Path<br/>Identified?}
+    Check4D -->|No| Reject4
+    Check4D -->|Yes| Check4E{High-Risk Tasks<br/>Flagged?}
+    Check4E -->|No| Reject4
+    Check4E -->|Yes| Check4F{Tasks<br/>Assigned?}
+    Check4F -->|No| Reject4
+    Check4F -->|Yes| Approve4[✅ APPROVE GATE 4]
+    
+    %% IMPLEMENT Gate
+    IdentifyStage -->|IMPLEMENT| Gate5[Gate 5: IMPLEMENT → VERIFY]
+    Gate5 --> Check5A{All Tests<br/>Passing?}
+    Check5A -->|No| Reject5[❌ REJECT GATE 5]
+    Check5A -->|Yes| Check5B{Code Review<br/>Approved?}
+    Check5B -->|No| Reject5
+    Check5B -->|Yes| Check5C{Coverage<br/>≥90%?}
+    Check5C -->|No| Reject5
+    Check5C -->|Yes| Check5D{Documentation<br/>Updated?}
+    Check5D -->|No| Reject5
+    Check5D -->|Yes| Check5E{No Critical<br/>Security Issues?}
+    Check5E -->|No| Reject5
+    Check5E -->|Yes| Check5F{Constitutional<br/>Compliant?}
+    Check5F -->|No| Reject5
+    Check5F -->|Yes| Approve5[✅ APPROVE GATE 5]
+    
+    %% VERIFY Gate
+    IdentifyStage -->|VERIFY| Gate6[Gate 6: VERIFY → DONE]
+    Gate6 --> Check6A{Constitutional Audit<br/>Passing?}
+    Check6A -->|No| Reject6[❌ REJECT GATE 6]
+    Check6A -->|Yes| Check6B{Integration Tests<br/>Pass?}
+    Check6B -->|No| Reject6
+    Check6B -->|Yes| Check6C{Performance<br/>Benchmarks Met?}
+    Check6C -->|No| Reject6
+    Check6C -->|Yes| Check6D{Security Scan<br/>Clean?}
+    Check6D -->|No| Reject6
+    Check6D -->|Yes| Check6E{Acceptance Criteria<br/>Verified?}
+    Check6E -->|No| Reject6
+    Check6E -->|Yes| Check6F{Stakeholder<br/>Sign-off?}
+    Check6F -->|No| Reject6
+    Check6F -->|Yes| Check6G{Runbook<br/>Documented?}
+    Check6G -->|No| Reject6
+    Check6G -->|Yes| Approve6[✅ APPROVE GATE 6]
+    
+    %% Rejection Handling
+    Reject1 --> IdentifyGaps1[Identify missing criteria]
+    Reject2 --> IdentifyGaps2[Identify missing criteria]
+    Reject3 --> IdentifyGaps3[Identify missing criteria]
+    Reject4 --> IdentifyGaps4[Identify missing criteria]
+    Reject5 --> IdentifyGaps5[Identify missing criteria]
+    Reject6 --> IdentifyGaps6[Identify missing criteria]
+    
+    IdentifyGaps1 --> WaiverRequest1{Request<br/>Waiver?}
+    IdentifyGaps2 --> WaiverRequest2{Request<br/>Waiver?}
+    IdentifyGaps3 --> WaiverRequest3{Request<br/>Waiver?}
+    IdentifyGaps4 --> WaiverRequest4{Request<br/>Waiver?}
+    IdentifyGaps5 --> WaiverRequest5{Request<br/>Waiver?}
+    IdentifyGaps6 --> WaiverRequest6{Request<br/>Waiver?}
+    
+    WaiverRequest1 -->|Yes| Waiver1[Document justification<br/>& compensating control]
+    WaiverRequest2 -->|Yes| Waiver2[Document justification<br/>& compensating control]
+    WaiverRequest3 -->|Yes| Waiver3[Document justification<br/>& compensating control]
+    WaiverRequest4 -->|Yes| Waiver4[Document justification<br/>& compensating control]
+    WaiverRequest5 -->|Yes| Waiver5[Document justification<br/>& compensating control]
+    WaiverRequest6 -->|Yes| Waiver6[Document justification<br/>& compensating control]
+    
+    Waiver1 --> WaiverApproval1{Senior<br/>Approval?}
+    Waiver2 --> WaiverApproval2{Senior<br/>Approval?}
+    Waiver3 --> WaiverApproval3{Senior<br/>Approval?}
+    Waiver4 --> WaiverApproval4{Senior<br/>Approval?}
+    Waiver5 --> WaiverApproval5{Senior<br/>Approval?}
+    Waiver6 --> WaiverApproval6{Senior<br/>Approval?}
+    
+    WaiverApproval1 -->|Yes| Approve1
+    WaiverApproval2 -->|Yes| Approve2
+    WaiverApproval3 -->|Yes| Approve3
+    WaiverApproval4 -->|Yes| Approve4
+    WaiverApproval5 -->|Yes| Approve5
+    WaiverApproval6 -->|Yes| Approve6
+    
+    WaiverApproval1 -->|No| StayInStage1[Remain in INTAKE]
+    WaiverApproval2 -->|No| StayInStage2[Remain in SPECIFY]
+    WaiverApproval3 -->|No| StayInStage3[Remain in PLAN]
+    WaiverApproval4 -->|No| StayInStage4[Remain in TASKS]
+    WaiverApproval5 -->|No| StayInStage5[Remain in IMPLEMENT]
+    WaiverApproval6 -->|No| StayInStage6[Remain in VERIFY]
+    
+    WaiverRequest1 -->|No| FixGaps1[Fix missing criteria]
+    WaiverRequest2 -->|No| FixGaps2[Fix missing criteria]
+    WaiverRequest3 -->|No| FixGaps3[Fix missing criteria]
+    WaiverRequest4 -->|No| FixGaps4[Fix missing criteria]
+    WaiverRequest5 -->|No| FixGaps5[Fix missing criteria]
+    WaiverRequest6 -->|No| FixGaps6[Fix missing criteria]
+    
+    FixGaps1 --> Gate1
+    FixGaps2 --> Gate2
+    FixGaps3 --> Gate3
+    FixGaps4 --> Gate4
+    FixGaps5 --> Gate5
+    FixGaps6 --> Gate6
+    
+    %% Approval Outcomes
+    Approve1 --> Transition1[Transition to SPECIFY]
+    Approve2 --> Transition2[Transition to PLAN]
+    Approve3 --> Transition3[Transition to TASKS]
+    Approve4 --> Transition4[Transition to IMPLEMENT]
+    Approve5 --> Transition5[Transition to VERIFY]
+    Approve6 --> Transition6[Mark as DONE]
+    
+    Transition1 --> LogAudit1[Log audit trail]
+    Transition2 --> LogAudit2[Log audit trail]
+    Transition3 --> LogAudit3[Log audit trail]
+    Transition4 --> LogAudit4[Log audit trail]
+    Transition5 --> LogAudit5[Log audit trail]
+    Transition6 --> LogAudit6[Log audit trail]
+    
+    LogAudit1 --> NotifyTeam1[Notify team]
+    LogAudit2 --> NotifyTeam2[Notify team]
+    LogAudit3 --> NotifyTeam3[Notify team]
+    LogAudit4 --> NotifyTeam4[Notify team]
+    LogAudit5 --> NotifyTeam5[Notify team]
+    LogAudit6 --> NotifyTeam6[Notify stakeholders]
+    
+    NotifyTeam1 --> End([Complete])
+    NotifyTeam2 --> End
+    NotifyTeam3 --> End
+    NotifyTeam4 --> End
+    NotifyTeam5 --> End
+    NotifyTeam6 --> End
+    
+    StayInStage1 --> End
+    StayInStage2 --> End
+    StayInStage3 --> End
+    StayInStage4 --> End
+    StayInStage5 --> End
+    StayInStage6 --> End
+    
+    %% Styling
+    classDef start fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef gate fill:#e1f5ff,stroke:#0277bd,stroke-width:2px
+    classDef check fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef approve fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    classDef reject fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    classDef waiver fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    
+    class Start,End start
+    class Gate1,Gate2,Gate3,Gate4,Gate5,Gate6 gate
+    class Check1A,Check1B,Check1C,Check1D,Check2A,Check2B,Check2C,Check2D,Check2E check
+    class Check3A,Check3B,Check3C,Check3D,Check3E,Check3F,Check4A,Check4B,Check4C,Check4D,Check4E,Check4F check
+    class Check5A,Check5B,Check5C,Check5D,Check5E,Check5F,Check6A,Check6B,Check6C,Check6D,Check6E,Check6F,Check6G check
+    class Approve1,Approve2,Approve3,Approve4,Approve5,Approve6 approve
+    class Reject1,Reject2,Reject3,Reject4,Reject5,Reject6 reject
+    class WaiverRequest1,WaiverRequest2,WaiverRequest3,WaiverRequest4,WaiverRequest5,WaiverRequest6 waiver
+    class Waiver1,Waiver2,Waiver3,Waiver4,Waiver5,Waiver6 waiver
 flowchart TB
     i[Intake]
     r[Ready]

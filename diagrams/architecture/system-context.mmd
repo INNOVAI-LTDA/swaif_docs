@@ -1,3 +1,43 @@
+---
+title: SWAIF System Context Diagram (C4 Level 1)
+description: Shows SWAIF's position in the broader software development ecosystem
+version: 1.0.0
+---
+
+C4Context
+    title System Context: SWAIF in the Software Development Ecosystem
+
+    Person(developer, "Software Developer", "Engineers building mission-critical systems")
+    Person(architect, "Solution Architect", "Designs system architecture and standards")
+    Person(stakeholder, "Product Stakeholder", "Defines requirements and approves releases")
+    Person(auditor, "Compliance Auditor", "Verifies regulatory compliance")
+
+    System(swaif, "SWAIF System", "Precision-engineered software development framework with six-stage workflow, constitutional governance, and AI-powered execution")
+
+    System_Ext(github, "GitHub Platform", "Version control, CI/CD, and project management")
+    System_Ext(copilot, "GitHub Copilot", "AI-powered code generation and assistance")
+    System_Ext(cloud, "Cloud Provider", "AWS/GCP/Azure for deployment infrastructure")
+    System_Ext(observability, "Observability Stack", "Prometheus, Grafana, DataDog for monitoring")
+    System_Ext(security, "Security Scanners", "Snyk, Dependabot, CodeQL for vulnerability detection")
+    System_Ext(communication, "Communication Tools", "Slack, Teams, Email for notifications")
+
+    Rel(developer, swaif, "Uses to develop features", "CLI, Web UI")
+    Rel(architect, swaif, "Defines architecture and standards", "CLI, Configuration")
+    Rel(stakeholder, swaif, "Reviews and approves gates", "Web UI, Email")
+    Rel(auditor, swaif, "Audits compliance", "Reports, Audit Trails")
+
+    Rel(swaif, github, "Manages code, issues, PRs", "GitHub API, GitHub Actions")
+    Rel(swaif, copilot, "Executes automated tasks", "Copilot Workspace API")
+    Rel(swaif, cloud, "Deploys applications", "Terraform, K8s API")
+    Rel(swaif, observability, "Sends metrics and logs", "OpenTelemetry, Prometheus")
+    Rel(swaif, security, "Runs security scans", "REST API")
+    Rel(swaif, communication, "Sends notifications", "Webhooks, REST API")
+
+    Rel(github, developer, "Notifies of changes", "Email, Webhooks")
+    Rel(observability, developer, "Alerts on issues", "Email, Slack")
+    Rel(security, developer, "Reports vulnerabilities", "Email, GitHub Issues")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 flowchart LR
     exec[Executive Sponsors]
     product[Product Managers]

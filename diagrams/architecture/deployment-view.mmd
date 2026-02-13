@@ -1,3 +1,137 @@
+---
+title: SWAIF Deployment Architecture
+description: Physical and logical deployment topology
+version: 1.0.0
+---
+
+graph TB
+    subgraph "Developer Workstation"
+        DevMachine[Development Machine<br/>macOS/Linux/Windows]
+        LocalCLI[SWAIF CLI<br/>Python 3.11+]
+        LocalGit[Git Client<br/>Version Control]
+        LocalDocker[Docker Desktop<br/>Container Runtime]
+        
+        DevMachine --> LocalCLI
+        DevMachine --> LocalGit
+        DevMachine --> LocalDocker
+    end
+
+    subgraph "GitHub Cloud"
+        subgraph "Control Plane"
+            GHProjects[GitHub Projects<br/>Kanban Board]
+            GHIssues[GitHub Issues<br/>Work Items]
+            GHRepo[GitHub Repository<br/>Source Code]
+            GHPages[GitHub Pages<br/>Documentation Site]
+        end
+        
+        subgraph "Automation"
+            GHActions[GitHub Actions<br/>CI/CD Runners]
+            GHCopilot[GitHub Copilot<br/>AI Assistant]
+            CodeQL[CodeQL Analysis<br/>Security Scanning]
+            Dependabot[Dependabot<br/>Dependency Updates]
+        end
+    end
+
+    subgraph "Cloud Provider (AWS/GCP/Azure)"
+        subgraph "Kubernetes Cluster"
+            subgraph "Namespace: swaif-production"
+                ProdPods[Application Pods<br/>3 replicas]
+                ProdService[K8s Service<br/>Load Balancer]
+                ProdIngress[Ingress Controller<br/>NGINX]
+            end
+            
+            subgraph "Namespace: swaif-staging"
+                StagingPods[Application Pods<br/>2 replicas]
+                StagingService[K8s Service<br/>Load Balancer]
+            end
+        end
+        
+        subgraph "Managed Services"
+            Database[(PostgreSQL<br/>Managed DB)]
+            Cache[(Redis<br/>Managed Cache)]
+            ObjectStore[(S3/GCS/Blob<br/>Artifact Storage)]
+            SecretManager[Secret Manager<br/>Vault/KMS]
+        end
+        
+        subgraph "Observability"
+            Prometheus[Prometheus<br/>Metrics Storage]
+            Grafana[Grafana<br/>Dashboards]
+            Loki[Loki<br/>Log Aggregation]
+            Jaeger[Jaeger<br/>Distributed Tracing]
+        end
+    end
+
+    subgraph "External Services"
+        DataDog[DataDog<br/>APM & Monitoring]
+        Snyk[Snyk<br/>Security Analysis]
+        Slack[Slack<br/>Notifications]
+        Email[Email Service<br/>SendGrid/SES]
+    end
+
+    %% Developer to GitHub
+    LocalCLI -->|HTTPS| GHProjects
+    LocalCLI -->|HTTPS| GHIssues
+    LocalGit -->|SSH/HTTPS| GHRepo
+    LocalCLI -->|HTTPS| GHCopilot
+
+    %% GitHub Internal
+    GHProjects --> GHActions
+    GHIssues --> GHActions
+    GHRepo --> GHActions
+    GHRepo --> CodeQL
+    GHRepo --> Dependabot
+    GHActions --> GHCopilot
+
+    %% GitHub to Cloud
+    GHActions -->|kubectl| ProdService
+    GHActions -->|kubectl| StagingService
+    GHActions -->|Terraform/Pulumi| Database
+    GHActions -->|Terraform/Pulumi| Cache
+    GHActions -->|API| ObjectStore
+
+    %% Kubernetes Internal
+    ProdIngress --> ProdService
+    ProdService --> ProdPods
+    StagingService --> StagingPods
+
+    %% Application to Data Stores
+    ProdPods -->|SQL| Database
+    ProdPods -->|Redis Protocol| Cache
+    ProdPods -->|HTTPS| ObjectStore
+    ProdPods -->|API| SecretManager
+    
+    StagingPods -->|SQL| Database
+    StagingPods -->|Redis Protocol| Cache
+    StagingPods -->|HTTPS| ObjectStore
+
+    %% Observability
+    ProdPods -->|Metrics| Prometheus
+    ProdPods -->|Logs| Loki
+    ProdPods -->|Traces| Jaeger
+    Prometheus --> Grafana
+    Loki --> Grafana
+    Jaeger --> Grafana
+
+    %% External Services
+    ProdPods -->|HTTPS| DataDog
+    GHActions -->|API| Snyk
+    GHActions -->|Webhook| Slack
+    GHActions -->|SMTP| Email
+    ProdPods -->|HTTPS| Slack
+
+    %% Styling
+    classDef dev fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef github fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef cloud fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef data fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    class DevMachine,LocalCLI,LocalGit,LocalDocker dev
+    class GHProjects,GHIssues,GHRepo,GHPages,GHActions,GHCopilot,CodeQL,Dependabot github
+    class ProdPods,ProdService,ProdIngress,StagingPods,StagingService cloud
+    class Prometheus,Grafana,Loki,Jaeger cloud
+    class Database,Cache,ObjectStore,SecretManager data
+    class DataDog,Snyk,Slack,Email external
 flowchart LR
     subgraph dev[Developer Workstations]
       ide[IDE]

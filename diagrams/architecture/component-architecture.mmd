@@ -1,3 +1,159 @@
+---
+title: SWAIF Component Architecture (C4 Level 3)
+description: Detailed internal structure showing all layers and components
+version: 1.0.0
+---
+
+graph TB
+    subgraph "Presentation Layer"
+        CLI[SWAIF CLI<br/>Command Interface]
+        WebUI[Web Dashboard<br/>Visual Status]
+        API[REST API<br/>External Integration]
+    end
+
+    subgraph "Application Layer"
+        Orchestrator[Stage Orchestrator<br/>Workflow Engine]
+        GateKeeper[Gate Keeper<br/>Exit Criteria Validator]
+        TaskManager[Task Manager<br/>Work Distribution]
+        ExecutionRouter[Execution Router<br/>Mode Selection]
+    end
+
+    subgraph "Domain Layer - Stage Engines"
+        IntakeEngine[Intake Engine<br/>Problem Analysis]
+        SpecifyEngine[Specify Engine<br/>Requirements Modeling]
+        PlanEngine[Plan Engine<br/>Architecture Design]
+        TasksEngine[Tasks Engine<br/>Work Decomposition]
+        ImplementEngine[Implement Engine<br/>Code Generation]
+        VerifyEngine[Verify Engine<br/>Integration Testing]
+    end
+
+    subgraph "Domain Layer - AI Execution"
+        CopilotMode[Copilot Mode<br/>Fully Automated]
+        HumanMode[Human Mode<br/>Semi-Automated]
+        ChallengerMode[Challenger Mode<br/>Adversarial Review]
+    end
+
+    subgraph "Domain Layer - Constitutional Guard"
+        ArticleI[Article I<br/>Traceability Check]
+        ArticleII[Article II<br/>Stage Gate Check]
+        ArticleIII[Article III<br/>Test-First Check]
+        ArticleIV[Article IV<br/>Challenger Check]
+        ArticleV[Article V<br/>Simplicity Check]
+        ArticleVI[Article VI<br/>Integration Check]
+        ArticleVII[Article VII<br/>Observability Check]
+        ArticleVIII[Article VIII<br/>Security Check]
+        ArticleIX[Article IX<br/>Documentation Check]
+    end
+
+    subgraph "Infrastructure Layer - Control Plane"
+        GitHubProjects[GitHub Projects<br/>State Management]
+        IssueTracker[Issue Tracker<br/>Requirement Tracking]
+        PRWorkflow[PR Workflow<br/>Code Review]
+        LabelManager[Label Manager<br/>Stage Tagging]
+    end
+
+    subgraph "Infrastructure Layer - Execution Plane"
+        GitHubActions[GitHub Actions<br/>CI/CD Pipeline]
+        CopilotWorkspace[Copilot Workspace<br/>AI Execution Env]
+        TestRunners[Test Runners<br/>pytest, Jest, k6]
+        SecurityScanners[Security Scanners<br/>CodeQL, Snyk]
+    end
+
+    subgraph "Infrastructure Layer - Data Plane"
+        GitRepo[Git Repository<br/>Source of Truth]
+        ArtifactStore[Artifact Store<br/>Build Outputs]
+        MetricsDB[Metrics Database<br/>Prometheus]
+        AuditLog[Audit Log<br/>Constitutional Compliance]
+        ObservabilityStack[Observability<br/>OpenTelemetry]
+    end
+
+    subgraph "External Integrations"
+        CloudProvider[Cloud Provider<br/>AWS/GCP/Azure]
+        Monitoring[Monitoring<br/>Grafana/DataDog]
+        Communication[Communication<br/>Slack/Teams]
+    end
+
+    %% Presentation to Application
+    CLI --> Orchestrator
+    WebUI --> Orchestrator
+    API --> Orchestrator
+
+    %% Application Layer Interactions
+    Orchestrator --> GateKeeper
+    Orchestrator --> TaskManager
+    Orchestrator --> ExecutionRouter
+    GateKeeper --> ArticleI
+    GateKeeper --> ArticleII
+
+    %% Orchestrator to Stage Engines
+    Orchestrator --> IntakeEngine
+    Orchestrator --> SpecifyEngine
+    Orchestrator --> PlanEngine
+    Orchestrator --> TasksEngine
+    Orchestrator --> ImplementEngine
+    Orchestrator --> VerifyEngine
+
+    %% Execution Router to AI Modes
+    ExecutionRouter --> CopilotMode
+    ExecutionRouter --> HumanMode
+    ExecutionRouter --> ChallengerMode
+
+    %% AI Modes to Implementation
+    CopilotMode --> ImplementEngine
+    HumanMode --> ImplementEngine
+    ChallengerMode --> ImplementEngine
+
+    %% Constitutional Guard
+    ImplementEngine --> ArticleI
+    ImplementEngine --> ArticleIII
+    ImplementEngine --> ArticleIV
+    ImplementEngine --> ArticleV
+    ImplementEngine --> ArticleVI
+    ImplementEngine --> ArticleVII
+    ImplementEngine --> ArticleVIII
+    ImplementEngine --> ArticleIX
+
+    %% Control Plane Connections
+    Orchestrator --> GitHubProjects
+    TaskManager --> IssueTracker
+    ImplementEngine --> PRWorkflow
+    GateKeeper --> LabelManager
+
+    %% Execution Plane Connections
+    ImplementEngine --> GitHubActions
+    CopilotMode --> CopilotWorkspace
+    ImplementEngine --> TestRunners
+    VerifyEngine --> SecurityScanners
+
+    %% Data Plane Connections
+    ImplementEngine --> GitRepo
+    VerifyEngine --> ArtifactStore
+    Orchestrator --> MetricsDB
+    ArticleI --> AuditLog
+    ArticleII --> AuditLog
+    ImplementEngine --> ObservabilityStack
+
+    %% External Integrations
+    VerifyEngine --> CloudProvider
+    MetricsDB --> Monitoring
+    Orchestrator --> Communication
+
+    %% Styling
+    classDef presentation fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef application fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef domain fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef infrastructure fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+
+    class CLI,WebUI,API presentation
+    class Orchestrator,GateKeeper,TaskManager,ExecutionRouter application
+    class IntakeEngine,SpecifyEngine,PlanEngine,TasksEngine,ImplementEngine,VerifyEngine domain
+    class CopilotMode,HumanMode,ChallengerMode domain
+    class ArticleI,ArticleII,ArticleIII,ArticleIV,ArticleV,ArticleVI,ArticleVII,ArticleVIII,ArticleIX domain
+    class GitHubProjects,IssueTracker,PRWorkflow,LabelManager infrastructure
+    class GitHubActions,CopilotWorkspace,TestRunners,SecurityScanners infrastructure
+    class GitRepo,ArtifactStore,MetricsDB,AuditLog,ObservabilityStack infrastructure
+    class CloudProvider,Monitoring,Communication external
 flowchart TB
     subgraph ui[Interfaces]
       board[Delivery Board]
