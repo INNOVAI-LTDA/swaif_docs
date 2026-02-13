@@ -181,3 +181,20 @@ flowchart TD
     class RiskCheck,IssuesFound,SeverityCheck,StillIssues,CIResult decision
     class ApproveProposal,ApproveModified,MergePR approve
     class Complete,NotifyTeam complete
+flowchart TD
+    open[Open PR with evidence]
+    auto[Automated checks]
+    challenger[Challenger review]
+    risk{Risk acceptable?}
+    quality{Quality gate passed?}
+    approve[Approve + merge]
+    rework[Request rework]
+
+    open --> auto
+    auto --> challenger
+    challenger --> risk
+    risk -- No --> rework
+    risk -- Yes --> quality
+    quality -- No --> rework
+    quality -- Yes --> approve
+    rework --> open

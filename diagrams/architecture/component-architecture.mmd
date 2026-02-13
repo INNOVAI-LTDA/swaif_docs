@@ -154,3 +154,41 @@ graph TB
     class GitHubActions,CopilotWorkspace,TestRunners,SecurityScanners infrastructure
     class GitRepo,ArtifactStore,MetricsDB,AuditLog,ObservabilityStack infrastructure
     class CloudProvider,Monitoring,Communication external
+flowchart TB
+    subgraph ui[Interfaces]
+      board[Delivery Board]
+      cli[Automation CLI]
+      pr[PR Checks]
+    end
+
+    subgraph core[SWAIF Core]
+      orchestrator[Stage Orchestrator]
+      rules[Gate Rules Evaluator]
+      risk[Risk Engine]
+      audit[Audit Log Service]
+    end
+
+    subgraph data[Data Services]
+      cfg[(Policy Config)]
+      work[(Work Items)]
+      ev[(Evidence Store)]
+      telem[(Telemetry DB)]
+    end
+
+    board --> orchestrator
+    cli --> orchestrator
+    pr --> rules
+
+    orchestrator --> rules
+    orchestrator --> risk
+    rules --> cfg
+    risk --> cfg
+
+    orchestrator --> work
+    rules --> ev
+    risk --> ev
+    audit --> ev
+
+    work --> telem
+    ev --> telem
+    telem --> board

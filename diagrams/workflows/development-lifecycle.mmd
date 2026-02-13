@@ -182,3 +182,17 @@ sequenceDiagram
     Cloud->>Orchestrator: Send metrics & logs
     Orchestrator->>Orchestrator: Monitor production health
     Orchestrator-->>Developer: Dashboard: All systems operational
+flowchart LR
+    intake[Intake]
+    ready[Ready]
+    progress[In Progress]
+    validation[Validation]
+    release[Release]
+    learn[Learn]
+
+    intake -->|clarify problem + success metrics| ready
+    ready -->|bound scope + define acceptance| progress
+    progress -->|complete functional increment| validation
+    validation -->|pass quality + compliance checks| release
+    release -->|capture outcome metrics| learn
+    learn -->|feed improvements| intake

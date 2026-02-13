@@ -38,3 +38,29 @@ C4Context
     Rel(security, developer, "Reports vulnerabilities", "Email, GitHub Issues")
 
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
+flowchart LR
+    exec[Executive Sponsors]
+    product[Product Managers]
+    team[Delivery Teams]
+    qa[QA/Security Reviewers]
+    platform[Runtime Platform]
+    metrics[Telemetry & Outcomes]
+
+    subgraph swaif[SWAIF Framework]
+      control[Control Plane]
+      stage[Stage Engine]
+      policy[Policy & Constitution Rules]
+      evidence[Evidence Store]
+    end
+
+    exec -->|governance priorities| control
+    product -->|initiative requests| stage
+    team -->|implementation updates| stage
+    qa -->|validation decisions| control
+
+    control --> policy
+    control --> stage
+    stage --> evidence
+    stage --> platform
+    platform --> metrics
+    metrics --> control

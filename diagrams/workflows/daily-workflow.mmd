@@ -136,3 +136,15 @@ flowchart TD
     class HumanFlow,StartHuman,HumanProposal,HumanTests,HumanCode human
     class ChallengerFlow,StartChallenger,ProposerImpl,ChallengerAttack,ProposerDefend,ChallengerTests,ChallengerCode challenger
     class TaskComplete,Standup complete
+flowchart TD
+    plan[Plan the day]
+    execute[Execute in small batches]
+    validate[Validate continuously]
+    publish[Publish status transparently]
+    learn[Close with learning]
+
+    plan --> execute
+    execute --> validate
+    validate --> publish
+    publish --> learn
+    learn --> plan

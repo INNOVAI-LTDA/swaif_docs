@@ -132,3 +132,40 @@ graph TB
     class Prometheus,Grafana,Loki,Jaeger cloud
     class Database,Cache,ObjectStore,SecretManager data
     class DataDog,Snyk,Slack,Email external
+flowchart LR
+    subgraph dev[Developer Workstations]
+      ide[IDE]
+      local[Local Tests]
+    end
+
+    subgraph ci[CI/CD]
+      build[Build Pipeline]
+      gates[Validation Gates]
+      artifacts[Artifact Registry]
+    end
+
+    subgraph cp[Control Plane Cluster]
+      api[Control API]
+      engine[Stage Engine]
+      policy[Policy Service]
+      store[(Evidence DB)]
+    end
+
+    subgraph runtime[Runtime Environments]
+      stg[Staging]
+      prod[Production]
+    end
+
+    ide --> local
+    local --> build
+    build --> gates
+    gates --> artifacts
+
+    gates --> api
+    api --> engine
+    engine --> policy
+    engine --> store
+
+    artifacts --> stg
+    stg --> prod
+    prod --> api

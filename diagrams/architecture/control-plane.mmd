@@ -159,3 +159,26 @@ graph TB
     class WFStageTransition,WFGateCheck,WFLabelSync,WFConstitutional,WFNotification,WFMetrics workflow
     class CLIStatus,CLIGate,CLITask,CLIImplement cli
     class ProjectData,IssueComments,PRReviews,ProjectFields state
+flowchart TD
+    constitution[Constitution Articles]
+    objectives[Program Objectives]
+    intake[Intake Proposals]
+    review[Control Review Board]
+    gates[Stage Gate Decisions]
+    exceptions[Exception Handling]
+    telemetry[Delivery Telemetry]
+    amendments[Policy Amendments]
+
+    constitution --> review
+    objectives --> review
+    intake --> review
+
+    review -->|approve constraints| gates
+    review -->|reject / request changes| intake
+
+    gates --> exceptions
+    gates --> telemetry
+    telemetry --> review
+
+    review -->|propose| amendments
+    amendments --> constitution

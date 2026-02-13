@@ -209,3 +209,16 @@ flowchart TD
     class Reject1,Reject2,Reject3,Reject4,Reject5,Reject6 reject
     class WaiverRequest1,WaiverRequest2,WaiverRequest3,WaiverRequest4,WaiverRequest5,WaiverRequest6 waiver
     class Waiver1,Waiver2,Waiver3,Waiver4,Waiver5,Waiver6 waiver
+flowchart TB
+    i[Intake]
+    r[Ready]
+    p[In Progress]
+    v[Validation]
+    rel[Release]
+    l[Learn]
+
+    i -->|clear problem, metrics, owners| r
+    r -->|bounded scope, testable AC, risk controls| p
+    p -->|functional completion, tests green, ops prep| v
+    v -->|quality/compliance pass, sign-off, rollback plan| rel
+    rel -->|outcomes measured, deviations analyzed| l
