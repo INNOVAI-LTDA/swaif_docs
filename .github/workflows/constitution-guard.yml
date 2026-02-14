@@ -13,12 +13,12 @@ jobs:
 
       - name: Ensure constitution docs are present
         run: |
-          test -f docs/CONSTITUTION_GUIDE.md
-          test -f docs/SWAIF_HANDBOOK.md
+          test -f docs/10_governance/CONSTITUTION_GUIDE.md
+          test -f docs/00_overview/SWAIF_HANDBOOK.md
 
       - name: Detect changes to constitution-sensitive files
         run: |
           git diff --name-only HEAD~1 HEAD | tee /tmp/changed.txt
-          if grep -Eq '^docs/(CONSTITUTION_GUIDE|SWAIF_HANDBOOK)\.md$' /tmp/changed.txt; then
+          if grep -Eq '^docs/(10_governance/CONSTITUTION_GUIDE|00_overview/SWAIF_HANDBOOK)\.md$' /tmp/changed.txt; then
             echo "Constitution files changed. Require reviewer attention."
           fi
