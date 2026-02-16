@@ -1,5 +1,8 @@
 # SWAIF Documentation Index
 
+## Owner
+SWAIF (this repository)
+
 This directory contains the structured documentation taxonomy for SWAIF.
 
 ## [Overview](00_overview/)
@@ -10,6 +13,9 @@ Constitution, governance model, and repository policies.
 
 ## [Workflow](20_workflow/)
 Stage-gated workflow, validation rules, and execution structure.
+
+## [Integration](35_integration/)
+SpecKit integration specification, invocation model, and impact tracking.
 
 ## [Agents](30_agents/)
 Agent roles, responsibilities, and behavioral constraints.

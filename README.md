@@ -1,5 +1,8 @@
 # SWAIF Documentation Hub
 
+## Owner
+SWAIF (this repository)
+
 SWAIF (Software Architecture with Intelligent Frameworks) is a specification-driven engineering discipline for delivering high-precision software systems.
 
 This repository is the canonical documentation source for SWAIF.
@@ -7,8 +10,8 @@ This repository is the canonical documentation source for SWAIF.
 It contains:
 - Governance model (Constitution and Articles)
 - Stage-based workflow definition
-- Agent roles and execution modes
-- Templates (specify, plan, tasks)
+- SWAIF-native agents and SpecKit integration references
+- Templates (governance + SpecKit references)
 - Research methodology and validation framework
 - Case study documentation
 - Benchmark structure
@@ -48,13 +51,20 @@ It is the “engine specification,” not the factory floor.
 
 ```
 docs/
-  overview/
-  governance/
-  workflow/
-  agents/
-  research/
-  funding/
+  00_overview/
+  10_governance/
+  20_workflow/
+  30_agents/
+  35_integration/
+  40_templates/
+  50_research/
+  60_benchmarks/
+  70_cases/
+  80_funding/
+  90_presentations/
 templates/
+  swaif-constitution.md
+  speckit-refs/
 .specify/
 .github/
 ```
@@ -63,10 +73,11 @@ templates/
 
 - Governance – Constitutional model and amendments
 - Workflow – Stage definitions and gate criteria
-- Agents – Roles and execution modes
+- Integration – How SWAIF calls SpecKit as a parametric background operation
+- Agents – SWAIF-native agents and SpecKit integration references
 - Research – Validation protocol and measurement framework
 - Funding – Derivative materials for public investment programs
-- Templates – Canonical SDD artifacts
+- Templates – SWAIF governance template and SpecKit reference docs
 - .specify/ – Reference memory and factory rules
 
 ---

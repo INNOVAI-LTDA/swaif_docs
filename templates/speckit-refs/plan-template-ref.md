@@ -1,3 +1,30 @@
+# Plan Template Reference (SpecKit-owned)
+
+## Owner
+SpecKit (external dependency — reference only)
+
+Canonical owner: SpecKit.
+This reference documents SWAIF extensions applied when invoking the SpecKit plan template.
+
+Tracked SpecKit version: **UNPINNED**.
+
+## SWAIF Extensions on Top of SpecKit
+- Constitution check integration prior to plan approval
+- Evidence plan linking plan outputs to SWAIF acceptance criteria
+
+## Ownership Split
+### Fields from SpecKit (canonical)
+- Core planning sections (architecture, sequencing, implementation approach)
+- Baseline delivery planning artifacts
+
+### Fields added by SWAIF
+- Constitution gate checks and constraints
+- Explicit evidence mapping to SWAIF business acceptance criteria
+
+---
+
+## Preserved Imported Template Content
+
 # Technical Plan: [Feature Name]
 
 <!-- 

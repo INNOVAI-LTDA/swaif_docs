@@ -1,13 +1,22 @@
-# Canonical Templates Reference
+# Templates Reference
 
-SWAIF uses specification-driven templates to enforce structure.
+## Owner
+SWAIF (this repository)
 
-Canonical templates are stored in: [/templates/](/templates/)
+SWAIF separates template ownership between governance artifacts and external production-template references.
 
-These include:
-- specify
-- plan
-- tasks
-- validation artifacts
+## SWAIF-owned template
+- `templates/swaif-constitution.md` — the governance framework applied to every factory run.
 
-This documentation defines their purpose and intended usage.
+## SpecKit-owned template references
+- `templates/speckit-refs/` contains reference documents for SpecKit SDD templates:
+  - spec template reference
+  - plan template reference
+  - tasks template reference
+
+SWAIF extends SpecKit templates with factory-specific fields but does not own the base templates.
+
+## Update policy
+When SpecKit updates its templates, SWAIF must:
+1. update corresponding reference docs in `templates/speckit-refs/`, and
+2. assess and record impact in `docs/35_integration/SPECKIT_IMPACT_LOG.md`.
