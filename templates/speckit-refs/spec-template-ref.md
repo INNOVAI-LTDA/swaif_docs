@@ -1,3 +1,33 @@
+# Spec Template Reference (SpecKit-owned)
+
+## Owner
+SpecKit (external dependency — reference only)
+
+Canonical owner: SpecKit.
+This reference documents SWAIF extensions applied when invoking the SpecKit spec template.
+
+Tracked SpecKit version: **UNPINNED**.
+
+## SWAIF Extensions on Top of SpecKit
+- SWAIF Intake block with FIP reference
+- Declared execution type field
+- Risk level field from SWAIF risk agent
+- LGPD/compliance section aligned with SWAIF constitution
+
+## Ownership Split
+### Fields from SpecKit (canonical)
+- Core SDD structure for specification authoring
+- Baseline requirements, acceptance criteria, and planning scaffolding
+
+### Fields added by SWAIF
+- Intake metadata and FIP linkage
+- Execution-type-aware coverage controls
+- Constitutional governance overlays and compliance framing
+
+---
+
+## Preserved Imported Template Content
+
 # Specification: [Feature Name]
 
 <!-- 

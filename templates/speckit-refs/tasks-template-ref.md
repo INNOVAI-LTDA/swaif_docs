@@ -1,3 +1,31 @@
+# Tasks Template Reference (SpecKit-owned)
+
+## Owner
+SpecKit (external dependency — reference only)
+
+Canonical owner: SpecKit.
+This reference documents SWAIF extensions applied when invoking the SpecKit tasks template.
+
+Tracked SpecKit version: **UNPINNED**.
+
+## SWAIF Extensions on Top of SpecKit
+- Execution record section
+- Drift log for deviations and approvals
+- SWAIF traceability matrix
+
+## Ownership Split
+### Fields from SpecKit (canonical)
+- Core task decomposition structure
+- Baseline implementation checklist and dependency sequencing
+
+### Fields added by SWAIF
+- Execution-mode and approval-aware logging
+- Business traceability overlays from SWAIF governance
+
+---
+
+## Preserved Imported Template Content
+
 # Task Breakdown: [Feature Name]
 
 <!--
