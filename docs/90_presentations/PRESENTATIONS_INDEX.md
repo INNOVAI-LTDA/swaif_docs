@@ -9,3 +9,7 @@ This section contains narrative material for:
 
 Slides and media assets may live externally.
 This repository stores the textual source.
+
+
+## Client-Facing Material
+- [SWAIF Client Transformation Playbook](SWAIF_CLIENT_TRANSFORMATION_PLAYBOOK.md)
