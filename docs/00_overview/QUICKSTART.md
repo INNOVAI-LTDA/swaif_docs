@@ -6,6 +6,180 @@ This guide walks you through installing SWAIF, initializing a project, and compl
 
 ---
 
+## How SWAIF Produces a Solution
+
+SWAIF produces a solution by converting a request into a sequence of stage artifacts, then enforcing gate criteria between stages.
+
+### 1) INTAKE — Structure the request into a decision-ready problem statement
+
+**Primary tool:** `swaif intake` CLI workflow  
+**Goal:** turn an unstructured request into an intake artifact with risk and feasibility metadata.
+
+**Command used**
+```bash
+swaif intake create "Task API with CRUD operations"
+```
+
+**Parameters**
+- `create`: starts a new intake artifact.
+- `"Task API with CRUD operations"`: seed requirement title used to initialize prompts.
+
+**What SWAIF asks for and records**
+- Business intent, scope, constraints, stakeholders, priority.
+- Initial complexity and risk level.
+- Early assumptions/dependencies.
+
+**Output artifacts**
+- `.swaif/artifacts/intake-001.md`
+- initial risk matrix metadata
+
+---
+
+### 2) INTAKE GATE — Verify readiness to specify
+
+**Primary tool:** `swaif gate`  
+**Goal:** ensure intake exit criteria are met before specification work begins.
+
+**Commands used**
+```bash
+swaif gate status INTAKE
+swaif gate approve INTAKE --reviewer="$(whoami)"
+```
+
+**Parameters**
+- `status INTAKE`: evaluates gate checks for the INTAKE stage.
+- `approve INTAKE`: records approval and unlocks the next stage.
+- `--reviewer="$(whoami)"`: stamps the decision with the current operator identity.
+
+**Gate checks typically include**
+- stakeholder clarity
+- feasibility evidence
+- risk matrix completeness
+
+---
+
+### 3) SPECIFY — Convert intent into testable system behavior
+
+**Primary tool:** `swaif specify`  
+**Goal:** produce concrete, testable specifications from the intake artifact.
+
+**Command used**
+```bash
+swaif specify --mode=copilot --auto-approve
+```
+
+**Parameters**
+- `--mode=copilot`: uses Copilot-assisted generation behavior.
+- `--auto-approve`: applies automatic gate approval when required checks pass.
+
+**Output artifacts**
+- `specs/api-contract.yaml`
+- `specs/data-model.md`
+- `specs/acceptance-tests.md`
+- `specs/behaviors.md`
+
+**Why this matters**
+- Requirements become explicit contracts and acceptance criteria, reducing ambiguity before implementation.
+
+---
+
+### 4) PLAN — Select architecture and implementation strategy
+
+**Primary tool:** `swaif plan`  
+**Goal:** convert specs into a build-ready design and delivery approach.
+
+**Command used**
+```bash
+swaif plan --mode=copilot
+```
+
+**Parameters**
+- `--mode=copilot`: enables AI-assisted plan generation and trade-off documentation.
+
+**Typical outputs**
+- architecture document(s)
+- deployment/runtime configuration
+- dependency baseline
+- explicit technology choices with rationale
+
+**Gate behavior**
+- The PLAN gate checks design completeness, risk controls, and implementation readiness.
+
+---
+
+### 5) TASKS — Decompose plan artifacts into executable units
+
+**Primary tool:** `swaif tasks`  
+**Goal:** break architecture into ordered, estimable tasks aligned to acceptance outcomes.
+
+**Command used**
+```bash
+swaif tasks generate
+```
+
+**Parameters**
+- `generate`: builds a structured task matrix from current plan/spec artifacts.
+
+**Output artifacts**
+- `.swaif/stages/tasks.yaml` (task IDs, sequencing, estimates, and dependency hints)
+
+**Why this matters**
+- Keeps implementation traceable: each task maps back to spec behavior and acceptance tests.
+
+---
+
+### 6) BUILD / VALIDATE — Implement with continuous conformance checks
+
+**Primary tools:** implementation stack + SWAIF gate checks  
+**Goal:** produce working software and prove it satisfies the specified behaviors.
+
+**Typical command pattern**
+```bash
+# implement code per task
+# run project test suite
+# run stage or quality gate checks
+swaif gate status BUILD
+```
+
+**Parameters**
+- `status BUILD`: verifies BUILD-stage criteria (for example, required tests and quality controls).
+
+**Evidence generated**
+- passing test results
+- implementation diffs tied to task IDs
+- gate status output
+
+---
+
+### 7) RELEASE / LEARN — Ship safely and feed learning back into future work
+
+**Primary tools:** release controls + SWAIF governance workflow  
+**Goal:** deploy with guardrails, measure outcomes, and convert lessons into future intake inputs.
+
+**Typical command pattern**
+```bash
+swaif gate status RELEASE
+swaif gate approve RELEASE --reviewer="$(whoami)"
+```
+
+**Parameters**
+- `status RELEASE`: confirms operational and governance checks before release.
+- `approve RELEASE`: records release authorization.
+
+**Learning loop outputs**
+- release decision records
+- post-release observations/metrics
+- improvement items for subsequent intake cycles
+
+---
+
+### End-to-end traceability model
+
+SWAIF’s core mechanism is: **request → artifacts → gated transition → next-stage artifact**.  
+Because each stage has explicit commands, parameters, and outputs, teams can audit exactly how a solution was produced and why each decision was made.
+
+---
+
 ## Prerequisites
 
 Before starting, ensure you have:
