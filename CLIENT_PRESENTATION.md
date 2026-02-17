@@ -688,7 +688,7 @@ We'll work together to:
 
 Contact us to discuss how SWAIF can transform your software delivery:
 
-- **Email**: sales@swaif.dev
+- **Email**: contact@swaif.dev
 - **Phone**: +1 (555) SWAIF-01
 - **Web**: https://swaif.dev/contact
 - **Demo**: https://swaif.dev/demo
